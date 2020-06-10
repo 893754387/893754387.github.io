@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="volitile关键字volatile关键字有两个语义：   保证了不同线程对变量进行操作时的可见性。 禁止指令重排序。   保证可见性volitile是轻量级的锁，在多处理器开发中保证了共享内存的可见性。 可见性：多个线程访问同一个共享变量时，其中一个线程对这个共享变量值的修改，其他线程能够立刻获得修改以后的值。 JMM规定JMM规定了八种原子性的主内存和工作内存的具体交互  lock：作用于主">
+<meta property="og:type" content="article">
+<meta property="og:title" content="volatile关键字">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/index.html">
+<meta property="og:site_name" content="老实宇">
+<meta property="og:description" content="volitile关键字volatile关键字有两个语义：   保证了不同线程对变量进行操作时的可见性。 禁止指令重排序。   保证可见性volitile是轻量级的锁，在多处理器开发中保证了共享内存的可见性。 可见性：多个线程访问同一个共享变量时，其中一个线程对这个共享变量值的修改，其他线程能够立刻获得修改以后的值。 JMM规定JMM规定了八种原子性的主内存和工作内存的具体交互  lock：作用于主">
+<meta property="og:image" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C%E5%9B%BE%E7%89%871.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C2.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C3.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C4.png">
+<meta property="article:published_time" content="2020-06-07T04:20:36.000Z">
+<meta property="article:modified_time" content="2020-06-07T04:20:36.000Z">
+<meta property="article:author" content="老实宇">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C%E5%9B%BE%E7%89%871.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/07/volatile关键字/"/>
+
+
+
+
+
+  <title>volatile关键字 | 老实宇</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4153ebc17b26e540e79b939e5b041be3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老实宇</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/07/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老实宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实宇">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">volatile关键字</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-07T12:20:36+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JUC/" itemprop="url" rel="index">
+                    <span itemprop="name">JUC</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="volitile关键字"><a href="#volitile关键字" class="headerlink" title="volitile关键字"></a>volitile关键字</h2><p>volatile关键字有两个语义：</p>
+<blockquote>
+<ol>
+<li>保证了不同线程对变量进行操作时的可见性。</li>
+<li>禁止指令重排序。</li>
+</ol>
+</blockquote>
+<h3 id="保证可见性"><a href="#保证可见性" class="headerlink" title="保证可见性"></a>保证可见性</h3><p>volitile是轻量级的锁，在多处理器开发中保证了共享内存的可见性。</p>
+<p><strong>可见性</strong>：多个线程访问同一个共享变量时，其中一个线程对这个共享变量值的修改，其他线程能够立刻获得修改以后的值。</p>
+<h4 id="JMM规定"><a href="#JMM规定" class="headerlink" title="JMM规定"></a>JMM规定</h4><p>JMM规定了八种原子性的主内存和工作内存的具体交互</p>
+<blockquote>
+<p>lock：作用于主内存中的变量，它把一个变量标识为一条线程独占的状态。</p>
+<p>unclock：作用于主内存中的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才能被其他线程锁定。</p>
+<p>read：作用于主内存中的变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的load动作使用。</p>
+<p>load：作用于工作内存中的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中。</p>
+<p>use：作用于工作内存中的变量，它把工作内存中一个变量的值传给执行引擎，每当虚拟机遇到一个需要use（使用）变量的值的字节码指令时，就会执行这个操作。</p>
+<p>assign：作用域工作内存中的变量，它把一个执行引擎接收的值赋给工作内存中的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作。</p>
+<p>store：作用于工作内存的变量，它把工作内存中一个变量的值传送给主内存中，以便随后的write操作使用。</p>
+<p>wirte：作用于主内存中的变量，它把store操作从工作内存中得到的变量的值放入主内存的变量中。</p>
+</blockquote>
+<p>其中volitile关键字通过以下规则保证了内存可见性：</p>
+<blockquote>
+<ol>
+<li><strong>read load use必须连续出现。即使用volatile修饰的变量必须从主内存中取。</strong></li>
+<li><strong>assign store write必须连续出现。对volatile修饰的变量进行赋值时，必须立刻写回主内存。</strong></li>
+</ol>
+</blockquote>
+<h3 id="禁止指令重排序"><a href="#禁止指令重排序" class="headerlink" title="禁止指令重排序"></a>禁止指令重排序</h3><p>java内存模型允许编译器和处理器对不存在<strong>数据依赖性</strong>的指令指令重排序以<strong>提高运行性能</strong>，充分发挥编译器和处理器的优化优势。</p>
+<h4 id="重排序的种类"><a href="#重排序的种类" class="headerlink" title="重排序的种类"></a>重排序的种类</h4><p><img src="volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C%E5%9B%BE%E7%89%871.png" alt="img"></p>
+<ol>
+<li>编译器重排序：编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。</li>
+<li>指令级重排序：处理器多条指令重叠执行，改变语句对应机器指令的执行顺序（处理器重排）。</li>
+<li>内存系统的重排序。处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行（处理器重排）</li>
+</ol>
+<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>两侧指令不可跨越的一道栅栏，用于实现对内存操作的顺序限制。</p>
+<h5 id="硬件级别内存屏障"><a href="#硬件级别内存屏障" class="headerlink" title="硬件级别内存屏障"></a>硬件级别内存屏障</h5><p>intel处理器提供了以下几种内存屏障。三种原语或者LOCK#</p>
+<blockquote>
+<ul>
+<li><p>lfence，是一种Load Barrier 读屏障。在读指令前插入读屏障，可以让高速缓存中的数据失效，重新从主内存加载数据</p>
+</li>
+<li><p>sfence, 是一种Store Barrier 写屏障。在写指令之后插入写屏障，能让写入缓存的最新数据写回到主内存</p>
+</li>
+<li><p>mfence, 是一种全能型的屏障，具备ifence和sfence的能力</p>
+</li>
+<li><p>Lock#前缀，具有和内存屏障相同的作用</p>
+</li>
+</ul>
+</blockquote>
+<h5 id="JVM级别内存屏障"><a href="#JVM级别内存屏障" class="headerlink" title="JVM级别内存屏障"></a>JVM级别内存屏障</h5><p>在JSR规范中定义了4种内存屏障：</p>
+<blockquote>
+<ul>
+<li>LoadLoad屏障：（指令Load1; LoadLoad; Load2），在Load2及后续读取操作要读取的数据被访问前，保证Load1要读取的数据被读取完毕。</li>
+<li>LoadStore屏障：（指令Load1; LoadStore; Store2），在Store2及后续写入操作被刷出前，保证Load1要读取的数据被读取完毕。</li>
+<li>StoreStore屏障：（指令Store1; StoreStore; Store2），在Store2及后续写入操作执行前，保证Store1的写入操作对其它处理器可见。</li>
+<li>StoreLoad屏障：（指令Store1; StoreLoad; Load2），在Load2及后续所有读取操作执行前，保证Store1的写入对所有处理器可见。<strong>它的开销是四种屏障中最大的。在大多数处理器的实现中，这个屏障是个万能屏障（由于读写的顺序是固定的，必须先读才能写），兼具其它三种内存屏障的功能</strong></li>
+</ul>
+</blockquote>
+<h5 id="JMM规定-1"><a href="#JMM规定-1" class="headerlink" title="JMM规定"></a>JMM规定</h5><blockquote>
+<ul>
+<li>在每个volatile写操作的<strong>前面</strong>插入一个StoreStore屏障；</li>
+<li>在每个volatile写操作的<strong>后面</strong>插入一个StoreLoad屏障； </li>
+<li>在每个volatile读操作的<strong>后面</strong>插入一个LoadLoad屏障； </li>
+<li>在每个volatile读操作的<strong>后面</strong>插入一个LoadStore屏障.</li>
+</ul>
+</blockquote>
+<h3 id="HotSpot实现"><a href="#HotSpot实现" class="headerlink" title="HotSpot实现"></a>HotSpot实现</h3><h4 id="volatile读"><a href="#volatile读" class="headerlink" title="volatile读"></a>volatile读</h4><p>以对静态变量赋值为例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> i=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        i=<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看字节码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javap -v Test.class</span><br></pre></td></tr></table></figure>
+
+<p>i变量的flags多了个<code>ACC_VOLATILE</code>吗，并通过<code>putstatic</code>对i进行了赋值操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> i;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: (<span class="number">0x0049</span>) ACC_PUBLIC, ACC_STATIC, ACC_VOLATILE</span><br><span class="line">...</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(java.lang.String[])</span></span>;</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: (<span class="number">0x0009</span>) ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: iconst_2</span><br><span class="line">         1: putstatic     #7                  // Field i:I</span><br><span class="line">         <span class="number">4</span>: <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+
+<p>追到<code>bytecodeInterpreter.cpp</code>中的<code>putstatic</code>的源码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">CASE(_putstatic):</span><br><span class="line">	......             </span><br><span class="line">         <span class="comment">//</span></span><br><span class="line">         <span class="comment">// Now store the result</span></span><br><span class="line">         <span class="comment">//</span></span><br><span class="line">         <span class="keyword">int</span> field_offset = cache-&gt;f2_as_index();</span><br><span class="line">         <span class="keyword">if</span> (cache-&gt;is_volatile()) &#123;</span><br><span class="line">           <span class="keyword">if</span> (tos_type == itos) &#123;</span><br><span class="line">             obj-&gt;release_int_field_put(field_offset, STACK_INT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == atos) &#123;</span><br><span class="line">             VERIFY_OOP(STACK_OBJECT(<span class="number">-1</span>));</span><br><span class="line">             obj-&gt;release_obj_field_put(field_offset, STACK_OBJECT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == btos) &#123;</span><br><span class="line">             obj-&gt;release_byte_field_put(field_offset, STACK_INT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ltos) &#123;</span><br><span class="line">             obj-&gt;release_long_field_put(field_offset, STACK_LONG(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ctos) &#123;</span><br><span class="line">             obj-&gt;release_char_field_put(field_offset, STACK_INT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == stos) &#123;</span><br><span class="line">             obj-&gt;release_short_field_put(field_offset, STACK_INT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ftos) &#123;</span><br><span class="line">             obj-&gt;release_float_field_put(field_offset, STACK_FLOAT(<span class="number">-1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">             obj-&gt;release_double_field_put(field_offset, STACK_DOUBLE(<span class="number">-1</span>));</span><br><span class="line">           &#125;</span><br><span class="line">           OrderAccess::storeload();</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			......</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>cache-&gt;is_volatile()</code> 判断flags是否有<code>ACC_VOLATILE</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_volatile</span> <span class="params">()</span> <span class="keyword">const</span>         </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">return</span> (_flags &amp; JVM_ACC_VOLATILE) != <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据数据类型走到<code>obj-&gt;release_int_field_put(field_offset, STACK_INT(-1));</code></p>
+<p>执行<code>OrderAccess::release_store</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">oopDesc::release_int_field_put</span><span class="params">(<span class="keyword">int</span> offset, jint contents)</span>       </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    OrderAccess::release_store(int_field_addr(offset), contents);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>OrderAccess::release_store</code>的实现和操作系统还有硬件相关</p>
+<p><img src="volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C2.png" alt="image-20200606211735606"></p>
+<p>查看<code>LINUX_X86</code>平台下的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">OrderAccess::release_store</span><span class="params">(<span class="keyword">volatile</span> jint* p, jint v)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    *p = v; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>volatile在C/C++中的作用：</p>
+<p>C/C++中的volatile是禁止编译器对变量的操作进行优化,每次读取需要从内存读取，不允许从cpu缓存或者寄存器中取值。<a href="https://www.cnblogs.com/aquester/p/10328479.html" target="_blank" rel="noopener">详细</a></p>
+</blockquote>
+<p><code>putstaic</code>完成赋值后，通过<code>OrderAccess::storeload()</code>加了内存屏障。</p>
+<p>具体的内存屏障的实现仍旧是平台相关的</p>
+<p><img src="volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C3.png" alt="image-20200606214108183"></p>
+<p>查看<code>LINUX_X86</code>平台下的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">OrderAccess::storeload</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    fence();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">OrderAccess::fence</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (os::is_MP()) &#123;  <span class="comment">//是否为多核处理器  若是单核 则不存在不可见或者重排序等问题</span></span><br><span class="line">    <span class="comment">// always use locked addl since mfence is sometimes expensive</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> AMD64</span></span><br><span class="line">    <span class="function">__asm__ <span class="title">volatile</span> <span class="params">(<span class="string">"lock; addl $0,0(%%rsp)"</span> : : : <span class="string">"cc"</span>, <span class="string">"memory"</span>)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="function">__asm__ <span class="title">volatile</span> <span class="params">(<span class="string">"lock; addl $0,0(%%esp)"</span> : : : <span class="string">"cc"</span>, <span class="string">"memory"</span>)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过以下汇编语句实现了内存，lock指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock; addl $0,0(%%rsp)&quot; : : : &quot;cc&quot;, &quot;memory&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>lock：</p>
+<ul>
+<li>在执行lock后面指令时，锁定总线或锁缓存，阻止其它CPU通过总线访问内存，直到这些指令执行结束</li>
+<li>这条指令的执行变成原子操作</li>
+<li>读写请求都不能越过lock指令进行重排，相当于一个内存屏障。</li>
+</ul>
+</blockquote>
+<h4 id="volatile写"><a href="#volatile写" class="headerlink" title="volatile写"></a>volatile写</h4><p><strong>x86处理器平台仅仅会对写-读操作做重排序，所以StoreStore，LoadLoad，LoadStore忽略</strong>，所以此平台下volatile读是不需要加任何内存屏障的。</p>
+<p><code>getstatic</code>确实是没加内存屏障的（某种情况除外）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">CASE(_getstatic):</span><br><span class="line">			...</span><br><span class="line">          <span class="comment">//</span></span><br><span class="line">          <span class="comment">// Now store the result on the stack</span></span><br><span class="line">          <span class="comment">//</span></span><br><span class="line">          TosState tos_type = cache-&gt;flag_state();</span><br><span class="line">          <span class="keyword">int</span> field_offset = cache-&gt;f2_as_index();</span><br><span class="line">          <span class="keyword">if</span> (cache-&gt;is_volatile()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (support_IRIW_for_not_multiple_copy_atomic_cpu) &#123;</span><br><span class="line">              OrderAccess::fence();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (tos_type == atos) &#123;</span><br><span class="line">              VERIFY_OOP(obj-&gt;obj_field_acquire(field_offset));</span><br><span class="line">              SET_STACK_OBJECT(obj-&gt;obj_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == itos) &#123;</span><br><span class="line">              SET_STACK_INT(obj-&gt;int_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ltos) &#123;</span><br><span class="line">              SET_STACK_LONG(obj-&gt;long_field_acquire(field_offset), <span class="number">0</span>);</span><br><span class="line">              MORE_STACK(<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == btos) &#123;</span><br><span class="line">              SET_STACK_INT(obj-&gt;byte_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ctos) &#123;</span><br><span class="line">              SET_STACK_INT(obj-&gt;char_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == stos) &#123;</span><br><span class="line">              SET_STACK_INT(obj-&gt;short_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tos_type == ftos) &#123;</span><br><span class="line">              SET_STACK_FLOAT(obj-&gt;float_field_acquire(field_offset), <span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              SET_STACK_DOUBLE(obj-&gt;double_field_acquire(field_offset), <span class="number">0</span>);</span><br><span class="line">              MORE_STACK(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			...</span><br><span class="line">          &#125;</span><br><span class="line">			...</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下要加屏障，没看太懂，好像就是判断处理器是否支持即读即写</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// To assure the IRIW property on processors that are not multiple copy</span></span><br><span class="line"><span class="comment">// atomic, sync instructions must be issued between volatile reads to</span></span><br><span class="line"><span class="comment">// assure their ordering, instead of after volatile stores.</span></span><br><span class="line"><span class="comment">// (See "A Tutorial Introduction to the ARM and POWER Relaxed Memory Models"</span></span><br><span class="line"><span class="comment">// by Luc Maranget, Susmit Sarkar and Peter Sewell, INRIA/Cambridge)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CPU_NOT_MULTIPLE_COPY_ATOMIC</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bool</span> support_IRIW_for_not_multiple_copy_atomic_cpu = <span class="literal">true</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bool</span> support_IRIW_for_not_multiple_copy_atomic_cpu = <span class="literal">false</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>结论：linux_X86平台，JVM通过在volatile写之后加StoreLoad屏障防止volatile读写的乱序。</strong></p>
+<h4 id="硬件层面"><a href="#硬件层面" class="headerlink" title="硬件层面"></a>硬件层面</h4><p>由LOCK#前缀实现可见性的过程如下，以修改变量a为例：</p>
+<blockquote>
+<ul>
+<li>JVM中线程A向处理器发出LOCK#指令 </li>
+<li>发出的LOCK#指令锁总线或锁缓存行，同时让其他高速缓存中的缓存行内容失效</li>
+<li>线程A向主存刷回最新修改的a</li>
+<li>其他线程读取该值时，发现对应地支的缓存行被锁，等待锁释放，并通过<strong>缓存一致性协议</strong>保证它读取到最新的值</li>
+</ul>
+</blockquote>
+<h3 id="不保证原子性"><a href="#不保证原子性" class="headerlink" title="不保证原子性"></a>不保证原子性</h3><p>volatile不能保证原子性，一个很经典的例子就是<code>i++</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileTest2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        List&lt;Thread&gt; threads = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">            threads.add( <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">100000</span>; j++)</span><br><span class="line">                    VolatileTest2.increase();</span><br><span class="line">            &#125;));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Thread t :</span><br><span class="line">                threads) &#123;</span><br><span class="line">            t.start();</span><br><span class="line">            t.join();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(VolatileTest2.i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大概模拟的代码就是上面，但是我没实验出来，但是idea出现了警告</p>
+<p><img src="volatile%E5%85%B3%E9%94%AE%E5%AD%97%5C4.png" alt="image-20200606225618805"></p>
+<p><code>i++</code>这个动作的整个过程</p>
+<blockquote>
+<p>volatile读i到工作内存   //read load use</p>
+<p>加1</p>
+<p>volatile写回主内存     //assgin  strore write</p>
+<p>插入内存屏障，即LOCK汇编码，保证可见性。</p>
+</blockquote>
+<p><strong>volatile关键字只保证getstatic和putstatic的动作是原子性的，即读写的动作是原子性的</strong></p>
+<p>假设此时i==0，若线程A进行1操作，还没进行2操作的时候阻塞了，线程B顺利执行了1操作和2操作，此时线程A唤醒继续执行，它是不会重新去读取主内存中的i变量的，而是继续使用自己工作内存中的变量（即使此时主内存中的变量和工作内存中的变量副本已经不同了），因为<strong>LOCK内存屏障只会强制volatile读操作去内存读</strong>，此时线程A已经过了volatile读这个阶段了，所以不会去内存中读。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/06/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8/" rel="next" title="强、软、弱、虚引用">
+                <i class="fa fa-chevron-left"></i> 强、软、弱、虚引用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/10/%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E5%85%AC%E5%B9%B3%E9%94%81%E4%B8%8E%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81/" rel="prev" title="可重入锁的公平锁与非公平锁">
+                可重入锁的公平锁与非公平锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老实宇</p>
+              <p class="site-description motion-element" itemprop="description">你在第二层,以为我是第一层,实际上我在第五层</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#volitile关键字"><span class="nav-number">1.</span> <span class="nav-text">volitile关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保证可见性"><span class="nav-number">1.1.</span> <span class="nav-text">保证可见性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM规定"><span class="nav-number">1.1.1.</span> <span class="nav-text">JMM规定</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁止指令重排序"><span class="nav-number">1.2.</span> <span class="nav-text">禁止指令重排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#重排序的种类"><span class="nav-number">1.2.1.</span> <span class="nav-text">重排序的种类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存屏障"><span class="nav-number">1.2.2.</span> <span class="nav-text">内存屏障</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#硬件级别内存屏障"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">硬件级别内存屏障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#JVM级别内存屏障"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">JVM级别内存屏障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#JMM规定-1"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">JMM规定</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HotSpot实现"><span class="nav-number">1.3.</span> <span class="nav-text">HotSpot实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile读"><span class="nav-number">1.3.1.</span> <span class="nav-text">volatile读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile写"><span class="nav-number">1.3.2.</span> <span class="nav-text">volatile写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#硬件层面"><span class="nav-number">1.3.3.</span> <span class="nav-text">硬件层面</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不保证原子性"><span class="nav-number">1.4.</span> <span class="nav-text">不保证原子性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老实宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

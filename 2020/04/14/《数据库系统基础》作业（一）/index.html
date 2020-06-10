@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="​    这个学期，《数据库系统基础》这门课我就听了前两节，作业都是靠着自己之前学的mysql的一些知识硬撑。本来想等着北京宣布开学那天我就通过录屏把落下的课全补上，但是北京好像可能这个学期都不开学了，这个课不能不抓紧了，以免到了期末让老师为难，想着这个课也是概念很多，知识很多，就想通过博客记录把作业整理起来。如果放在本地，我估计以后是想不起来看的。 大部分是抄袭答案。 9.1    解释下列概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《数据库系统基础》作业（一）">
+<meta property="og:url" content="http://yoursite.com/2020/04/14/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E3%80%8B%E4%BD%9C%E4%B8%9A%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="老实宇">
+<meta property="og:description" content="​    这个学期，《数据库系统基础》这门课我就听了前两节，作业都是靠着自己之前学的mysql的一些知识硬撑。本来想等着北京宣布开学那天我就通过录屏把落下的课全补上，但是北京好像可能这个学期都不开学了，这个课不能不抓紧了，以免到了期末让老师为难，想着这个课也是概念很多，知识很多，就想通过博客记录把作业整理起来。如果放在本地，我估计以后是想不起来看的。 大部分是抄袭答案。 9.1    解释下列概念">
+<meta property="article:published_time" content="2020-04-14T12:28:58.000Z">
+<meta property="article:modified_time" content="2020-04-14T12:28:58.000Z">
+<meta property="article:author" content="老实宇">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/14/《数据库系统基础》作业（一）/"/>
+
+
+
+
+
+  <title>《数据库系统基础》作业（一） | 老实宇</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4153ebc17b26e540e79b939e5b041be3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老实宇</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/14/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E3%80%8B%E4%BD%9C%E4%B8%9A%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老实宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实宇">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《数据库系统基础》作业（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-14T20:28:58+08:00">
+                2020-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>​    这个学期，《数据库系统基础》这门课我就听了前两节，作业都是靠着自己之前学的mysql的一些知识硬撑。本来想等着北京宣布开学那天我就通过录屏把落下的课全补上，但是北京好像可能这个学期都不开学了，这个课不能不抓紧了，以免到了期末让老师为难，想着这个课也是概念很多，知识很多，就想通过博客记录把作业整理起来。如果放在本地，我估计以后是想不起来看的。</p>
+<p><strong>大部分是抄袭答案。</strong></p>
+<h5 id="9-1-解释下列概念的含义"><a href="#9-1-解释下列概念的含义" class="headerlink" title="9.1    解释下列概念的含义"></a>9.1    解释下列概念的含义</h5><ol>
+<li>基表：数据库中实际存在的表，它是实际存储数据的逻辑表示。</li>
+<li>DDL： Data Definition Language，数据定义语言，用于创建，修改，删除数据库对象的语句。</li>
+<li>DML：Data Manipulation Language，数据操纵语言，用于对表中数据的插入，删除和修改。</li>
+<li>内连接：两表连接查询中只有满足连接条件的元组才出现在结果中，与外连接相比，只显示公共部分。</li>
+<li>自然连接：一种特殊的等值连接，它要求两个关系中进行比较的分量是必须是相同的属性组，并在结果中把重复的属性列取掉。</li>
+<li>外连接：在外连接的两个表中，一个表（取决于左外连接还是右外连接）的所有行都出现在结果中，另一个表中只有符合条件的才出现在结果中。</li>
+<li>视图：基于用户需要的与表具有相同形式，但是不以物理存放的数据的形式存在于数据库中的数据库对象。视图只是定义为对其他表或视图的查询结果，当用户的查询涉及视图时，系统将根据视图的定义，将该查询变换成对基表的查询。</li>
+<li>索引：用于快速查找元祖的数据库对象，通过建立恰当的索引，能够根据属性值快速找到具有这些值的元组。</li>
+<li>宿主语言：被sql嵌入的通用高级编程语言，例如在c语言中需要调用数据库而使用sql,宿主语言即为c。</li>
+<li>嵌入式sql：降sql嵌入到通用的编程语言编写的程序中，用于在数据库应用系统等场合下访问数据库。</li>
+<li>交互式sql：在独立使用sql语言进行数据库操作时，其使用方法称为交互式sql。缺点在于只能用于数据库的操作，不能进行数据处理。</li>
+</ol>
+<h5 id="9-2-举例说明创建视图的优点"><a href="#9-2-举例说明创建视图的优点" class="headerlink" title="9.2 举例说明创建视图的优点"></a>9.2 举例说明创建视图的优点</h5><p>​    视图可以提高数据库的安全性,且能更好满足用户需求。例如销售系统只希望将产品的名称和定价、库存数量展示给用户, 而以上信息分布在不同的表中, 如果直接将各表的查询权限开放给用户,用户就可能能够访问这些表中的其他信息,例如产品成本和入库时间等,不利于企业进行销售 ,而且用户需要查询多张表才能获取相应的信息。但如果使用视图进行操作, 则可以将以上信息整合在一个视图中, 既避免了用户查询到公司不愿透露的其他信息，也方便了客户进行信息查找。</p>
+<h5 id="9-3-简述sql的特点"><a href="#9-3-简述sql的特点" class="headerlink" title="9.3 简述sql的特点"></a>9.3 简述sql的特点</h5><p>一是SQL具有十分灵活和强大的查询功能,其SELECT语句能完成相当复杂的查询操作，包括各种关系代数、统计、排序等操作;</p>
+<p>二是SQL不是一个应用开发语言，它只提供对数据库的操作功能，不能完成屏幕控制、菜单管理、报表生成等功能。但SQL既可以作为交互式语言独立使用，也可以作为子语言潜入在主要语言中使用(嵌入式SQL) ,成为应用开发语言的一部分。</p>
+<p>三是SQL是国际标准语言, 有利于各种数据库之间交换数据，有利于程序的移植,有利于实现高度的数据独立性，有助于实现标准化。</p>
+<p>四是SQL词汇不多,完成核心功能只用了9个英语动词， 语法结构接近英语,容易学习和使用。</p>
+<h5 id="9-4-用sql定义下列5个表，定义适当的参照完整性约束"><a href="#9-4-用sql定义下列5个表，定义适当的参照完整性约束" class="headerlink" title="9.4    用sql定义下列5个表，定义适当的参照完整性约束"></a>9.4    用sql定义下列5个表，定义适当的参照完整性约束</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Student(</span><br><span class="line">	<span class="keyword">sID</span> <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> PRIMARY <span class="keyword">KEY</span> auto_increment,</span><br><span class="line">	sName <span class="built_in">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	age <span class="built_in">int</span>,</span><br><span class="line">	sex <span class="built_in">char</span>(<span class="number">2</span>),</span><br><span class="line">	beginYear <span class="built_in">int</span></span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Course(</span><br><span class="line">	cID <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> PRIMARY <span class="keyword">KEY</span> auto_increment,</span><br><span class="line">	cName <span class="built_in">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	credit <span class="built_in">int</span> <span class="keyword">COMMENT</span><span class="string">'学分'</span>,</span><br><span class="line">	preCID <span class="built_in">int</span>,</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> fk_self <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(preCID) <span class="keyword">REFERENCES</span>  <span class="string">`Course`</span>(cID)</span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Is_registered(</span><br><span class="line">	<span class="keyword">sID</span> <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	cID <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	rYear <span class="built_in">int</span>,</span><br><span class="line">	semester <span class="built_in">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">	score <span class="built_in">int</span>,</span><br><span class="line">	PRIMARY <span class="keyword">KEY</span>(<span class="keyword">sID</span>,cId),</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> fk_sID_ <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(<span class="keyword">sID</span>) <span class="keyword">REFERENCES</span> <span class="string">`Student`</span>(<span class="keyword">sID</span>),</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> fk_cID_ <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(cID) <span class="keyword">REFERENCES</span> <span class="string">`Course`</span>(cID)</span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Teacher(</span><br><span class="line">	tID <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> PRIMARY <span class="keyword">KEY</span> auto_increment,</span><br><span class="line">	tName <span class="built_in">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	sex <span class="built_in">char</span>(<span class="number">2</span>),</span><br><span class="line">	title <span class="built_in">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">	salary <span class="built_in">int</span></span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Is_qualified(</span><br><span class="line">	tID <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	cID <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">	beginDate <span class="built_in">date</span>,</span><br><span class="line">	PRIMARY <span class="keyword">KEY</span>(tID,cID),</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> fk_tID <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(tID) <span class="keyword">REFERENCES</span> <span class="string">`Teacher`</span>(tID),</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> fk_cID2 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(cID) <span class="keyword">REFERENCES</span> <span class="string">`Course`</span>(cID)</span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-6-试为题9-4中的表用alter-table或触发器定义如下约束。"><a href="#9-6-试为题9-4中的表用alter-table或触发器定义如下约束。" class="headerlink" title="9.6    试为题9.4中的表用alter table或触发器定义如下约束。"></a>9.6    试为题9.4中的表用alter table或触发器定义如下约束。</h5><p>(1)学生的年龄在10~50之间</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$   </span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TRIGGER</span> <span class="keyword">if</span> <span class="keyword">EXISTS</span> studentAge;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> studentAge <span class="keyword">BEFORE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> student <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> msg <span class="built_in">VARCHAR</span>(<span class="number">255</span>);</span><br><span class="line">	if new.age&lt;10 OR new.age&gt;50 then</span><br><span class="line">	<span class="keyword">set</span> msg=<span class="string">"年龄不合法"</span>;</span><br><span class="line">	SIGNAL SQLSTATE 'HY000' <span class="keyword">SET</span> message_text=msg;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>(2)性别只能取男或女</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$   </span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TRIGGER</span> <span class="keyword">if</span> <span class="keyword">EXISTS</span> studentSex;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> studentSex <span class="keyword">BEFORE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> student <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> msg <span class="built_in">VARCHAR</span>(<span class="number">255</span>);</span><br><span class="line">	if new.sex!='男' and new.sex!='女' then</span><br><span class="line">	<span class="keyword">set</span> msg=<span class="string">"性别不合法"</span>;</span><br><span class="line">	SIGNAL SQLSTATE 'HY000' <span class="keyword">SET</span> message_text=msg;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>(3)2001年春季学期选修1课的学生不得超过50人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$   </span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TRIGGER</span> <span class="keyword">if</span> <span class="keyword">EXISTS</span> courseRegisteredLimit;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> courseRegisteredLimit <span class="keyword">BEFORE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> is_registered <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> msg <span class="built_in">VARCHAR</span>(<span class="number">255</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="keyword">num</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line">	if new.cID=1 and new.semester='spring' then</span><br><span class="line">	<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">into</span> <span class="keyword">num</span> <span class="keyword">from</span> is_registered <span class="keyword">where</span> cID=new.cID;</span><br><span class="line">	if num &gt; 50 then</span><br><span class="line">	<span class="keyword">set</span> msg=<span class="string">"选课已满"</span>;</span><br><span class="line">	SIGNAL SQLSTATE 'HY000' <span class="keyword">SET</span> message_text=msg;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>(4)同一学期中选修1课的学生人数不得超过50人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$   </span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TRIGGER</span> <span class="keyword">if</span> <span class="keyword">EXISTS</span> courseRegisteredLimit2;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> courseRegisteredLimit2 <span class="keyword">BEFORE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> is_registered <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> msg <span class="built_in">VARCHAR</span>(<span class="number">255</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="keyword">num</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">DECLARE</span> newSemester <span class="built_in">VARCHAR</span>(<span class="number">32</span>);</span><br><span class="line">	<span class="keyword">set</span> newSemester=new.semester;</span><br><span class="line">	if new.cID=1 then</span><br><span class="line">	<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">into</span> <span class="keyword">num</span> <span class="keyword">from</span> is_registered <span class="keyword">where</span> cID=new.cID <span class="keyword">and</span> semester=newSemester;</span><br><span class="line">	if num &gt; 50 then</span><br><span class="line">	<span class="keyword">set</span> msg=<span class="string">"本学期选课已满"</span>;</span><br><span class="line">	SIGNAL SQLSTATE 'HY000' <span class="keyword">SET</span> message_text=msg;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>(5)任何学生在选修一门课之前必须已经修过其先修课并及格</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$   </span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TRIGGER</span> <span class="keyword">if</span> <span class="keyword">EXISTS</span> checkPre;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> checkPre <span class="keyword">BEFORE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> is_registered <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> msg <span class="built_in">VARCHAR</span>(<span class="number">255</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> preScore <span class="built_in">int</span>;</span><br><span class="line">	<span class="keyword">SELECT</span> score <span class="keyword">into</span> preScore <span class="keyword">from</span> is_registered <span class="keyword">where</span> <span class="keyword">sID</span>=new.sID <span class="keyword">and</span> cID=(<span class="keyword">SELECT</span> preCID <span class="keyword">from</span> Course <span class="keyword">where</span> Course.cID=new.cID);</span><br><span class="line">	if preScore &lt; 60 then</span><br><span class="line">	<span class="keyword">set</span> msg=<span class="string">"先修课未选或不及格"</span>;</span><br><span class="line">	SIGNAL SQLSTATE 'HY000' <span class="keyword">SET</span> message_text=msg;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-7-以题9-4中的表为基定义以下视图"><a href="#9-7-以题9-4中的表为基定义以下视图" class="headerlink" title="9.7    以题9.4中的表为基定义以下视图"></a>9.7    以题9.4中的表为基定义以下视图</h5><p>SCView(sID,sName,sex,courseID,courseName,semester,year,credit,score)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> SCView</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line"><span class="keyword">SELECT</span> student.sID,student.sName,teacher.sex,course.cID <span class="keyword">as</span> courseID,course.cName <span class="keyword">as</span> courseName,is_registered.semester,is_registered.rYear <span class="keyword">as</span> <span class="keyword">year</span>,course.credit,is_registered.score <span class="keyword">from</span> student,teacher,course,is_registered;</span><br></pre></td></tr></table></figure>
+
+<p>Totalscore(sID,sName,sex,age,countOfC,totalCredit,totalScore,avgScore)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> Totalscore</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line"><span class="keyword">SELECT</span> student.sID,student.sName,student.sex,student.age,</span><br><span class="line">(<span class="keyword">SELECT</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">FROM</span> is_registered <span class="keyword">WHERE</span> is_registered.sID=student.sID) <span class="keyword">as</span> countOfC,</span><br><span class="line">(<span class="keyword">SELECT</span> <span class="keyword">sum</span>(course.credit) <span class="keyword">FROM</span> course <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> is_registered <span class="keyword">ON</span> course.cID=is_registered.cID <span class="keyword">where</span> is_registered.sID=student.sID) <span class="keyword">as</span> totalCredit,</span><br><span class="line">(<span class="keyword">SELECT</span> <span class="keyword">sum</span>(score) <span class="keyword">from</span> is_registered  <span class="keyword">WHERE</span> is_registered.sID=student.sID) <span class="keyword">as</span> totalScore,</span><br><span class="line">(<span class="keyword">SELECT</span> <span class="keyword">avg</span>(score) <span class="keyword">FROM</span> is_registered <span class="keyword">where</span> is_registered.sID=student.sID) <span class="keyword">as</span> avgScore </span><br><span class="line"><span class="keyword">FROM</span> student,course,is_registered;</span><br></pre></td></tr></table></figure>
+
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- (1)按学号和课号升序输出学生及其选课信息，包括学号、姓名、课号、课名、学期、年份、学分和成绩</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> scview <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">sID</span>,courseID;</span><br><span class="line"><span class="comment">-- (2)按总成绩降序排列出每个学生的学号、姓名、性别、年龄和总成绩</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName,sex,age,totalsocre <span class="keyword">FROM</span> <span class="keyword">to</span> Totalscore <span class="keyword">ORDER</span> <span class="keyword">BY</span> totalScore <span class="keyword">DESC</span>;</span><br><span class="line"><span class="comment">-- (3)输出总成绩最高的学生的学号、姓名、性别和总成绩</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName,sex,age <span class="keyword">FROM</span> totalsocre <span class="keyword">WHERE</span> totalScore=(<span class="keyword">SELECT</span> <span class="keyword">max</span>(totalScore) <span class="keyword">from</span> Totalscore)</span><br><span class="line"><span class="comment">-- (4)输出平均成绩最高的学生的学号、姓名、性别和总成绩</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName,sex,age <span class="keyword">from</span> Totalscore <span class="keyword">where</span> avgScore = (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(aveScore) <span class="keyword">from</span> Totalscore)</span><br><span class="line"><span class="comment">-- (5)输出总学分最高的学生的学号、姓名、性别和总成绩</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName,sex,age <span class="keyword">from</span> Totalscore <span class="keyword">where</span> totalScore = (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(totalScore) <span class="keyword">from</span> Totalscore)</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-8-基于题9-4中的各表用sql语句完成下列查询"><a href="#9-8-基于题9-4中的各表用sql语句完成下列查询" class="headerlink" title="9.8    基于题9.4中的各表用sql语句完成下列查询"></a>9.8    基于题9.4中的各表用sql语句完成下列查询</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">from</span> is_registered <span class="keyword">WHERE</span> rYear=<span class="number">2001</span> <span class="keyword">and</span> cID=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> sName <span class="keyword">from</span> student <span class="keyword">WHERE</span> <span class="keyword">sID</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">FROM</span> is_registered <span class="keyword">WHERE</span> cID=<span class="number">2</span> <span class="keyword">and</span> score&gt;<span class="number">80</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> sName <span class="keyword">from</span> student <span class="keyword">WHERE</span> <span class="keyword">sID</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">from</span> is_registered <span class="keyword">WHERE</span> cid=<span class="number">1</span> <span class="keyword">and</span> rYear=<span class="number">2001</span> <span class="keyword">and</span> semester=<span class="string">'spring'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> <span class="keyword">sID</span> <span class="keyword">FROM</span> is_registered  <span class="keyword">WHERE</span> <span class="keyword">sID</span> <span class="keyword">in</span>(<span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">from</span> is_registered <span class="keyword">WHERE</span> cID=<span class="number">1</span> <span class="keyword">and</span> rYear=<span class="number">2001</span>) <span class="keyword">and</span> <span class="keyword">sID</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> <span class="keyword">sID</span> <span class="keyword">from</span> is_registered <span class="keyword">WHERE</span> cid=<span class="number">2</span> <span class="keyword">and</span> rYear=<span class="number">2001</span>) ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> tname <span class="keyword">from</span> (<span class="keyword">SELECT</span> tName,teacher.tID <span class="keyword">FROM</span> teacher <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> is_qualified <span class="keyword">ON</span> teacher.tID=is_qualified.tID <span class="keyword">WHERE</span> cID=<span class="number">3</span>) <span class="keyword">as</span> t <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> is_qualified <span class="keyword">ON</span> t.tID=is_qualified.tID <span class="keyword">WHERE</span> cID=<span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> student.sID,student.sName,countOfC,avgScore <span class="keyword">FROM</span> student <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> totalscore <span class="keyword">on</span> student.sID=totalscore.sID;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName <span class="keyword">from</span> totalscore <span class="keyword">WHERE</span> totalCredit &gt;<span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> sName <span class="keyword">FROM</span> student <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> is_registered <span class="keyword">on</span> student.sID=is_registered.sID <span class="keyword">WHERE</span> cID <span class="keyword">in</span> (<span class="keyword">SELECT</span> cID <span class="keyword">FROM</span> is_qualified <span class="keyword">WHERE</span> tID = (<span class="keyword">SELECT</span> tid <span class="keyword">FROM</span> teacher <span class="keyword">WHERE</span> tName=<span class="string">'a'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">sID</span>,sName,avgScore <span class="keyword">from</span> totalscore <span class="keyword">WHERE</span> avgScore=(<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(avgScore) <span class="keyword">FROM</span> totalScore);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> sname <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> <span class="keyword">sID</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">FROM</span> is_registered <span class="keyword">WHERE</span> cID=<span class="number">2</span>) <span class="keyword">and</span> <span class="keyword">sID</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> <span class="keyword">sID</span> <span class="keyword">FROM</span> is_registered <span class="keyword">WHERE</span> cID=<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> cName <span class="keyword">FROM</span> course <span class="keyword">WHERE</span> preCID=<span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> cName <span class="keyword">from</span> course <span class="keyword">WHERE</span> preCID=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.cID,a.cID,b.preCID,c.cName <span class="keyword">FROM</span> course a <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> course b <span class="keyword">on</span> a.preCID=b.cID <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> course c <span class="keyword">on</span> b.preCID=c.cID;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> tName,title,<span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">FROM</span> teacher <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> is_qualified <span class="keyword">on</span> is_qualified.tID=teacher.tID <span class="keyword">GROUP</span> <span class="keyword">BY</span> teacher.tID;</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-9-基于题9-4中的各表，用sql语句完成如下操作。"><a href="#9-9-基于题9-4中的各表，用sql语句完成如下操作。" class="headerlink" title="9.9    基于题9.4中的各表，用sql语句完成如下操作。"></a>9.9    基于题9.4中的各表，用sql语句完成如下操作。</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> is_qualified(tID,cID) <span class="keyword">VALUES</span> (<span class="number">99230</span>,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> beginYear&lt;<span class="number">2016</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> course <span class="keyword">SET</span> credit=<span class="number">4</span> <span class="keyword">WHERE</span> cName=<span class="string">'数据结构'</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/14/LRU%E5%92%8CLFU%E7%9A%84%E5%AE%9E%E7%8E%B0/" rel="next" title="LRU和LFU的实现">
+                <i class="fa fa-chevron-left"></i> LRU和LFU的实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/15/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E4%B9%8B%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="prev" title="背包问题之完全背包">
+                背包问题之完全背包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老实宇</p>
+              <p class="site-description motion-element" itemprop="description">你在第二层,以为我是第一层,实际上我在第五层</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-解释下列概念的含义"><span class="nav-number">1.</span> <span class="nav-text">9.1    解释下列概念的含义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-2-举例说明创建视图的优点"><span class="nav-number">2.</span> <span class="nav-text">9.2 举例说明创建视图的优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-3-简述sql的特点"><span class="nav-number">3.</span> <span class="nav-text">9.3 简述sql的特点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-4-用sql定义下列5个表，定义适当的参照完整性约束"><span class="nav-number">4.</span> <span class="nav-text">9.4    用sql定义下列5个表，定义适当的参照完整性约束</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-6-试为题9-4中的表用alter-table或触发器定义如下约束。"><span class="nav-number">5.</span> <span class="nav-text">9.6    试为题9.4中的表用alter table或触发器定义如下约束。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-7-以题9-4中的表为基定义以下视图"><span class="nav-number">6.</span> <span class="nav-text">9.7    以题9.4中的表为基定义以下视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-8-基于题9-4中的各表用sql语句完成下列查询"><span class="nav-number">7.</span> <span class="nav-text">9.8    基于题9.4中的各表用sql语句完成下列查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-9-基于题9-4中的各表，用sql语句完成如下操作。"><span class="nav-number">8.</span> <span class="nav-text">9.9    基于题9.4中的各表，用sql语句完成如下操作。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老实宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

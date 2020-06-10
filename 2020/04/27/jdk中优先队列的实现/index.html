@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述概念队列的定义是先进先出（First-In-First-Out）的一个数组，而优先队列(PriorityQueue)则是按照一个优先级出队列。 优先队列的实现方法是基于堆的。  堆（英语：heap)是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵树的数组对象。堆总是满足下列性质：  堆中某个节点的值总是不大于或不小于其父节点的值； 堆总是一棵完全二叉树。   堆是一棵特殊的完">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jdk中优先队列的实现">
+<meta property="og:url" content="http://yoursite.com/2020/04/27/jdk%E4%B8%AD%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="老实宇">
+<meta property="og:description" content="概述概念队列的定义是先进先出（First-In-First-Out）的一个数组，而优先队列(PriorityQueue)则是按照一个优先级出队列。 优先队列的实现方法是基于堆的。  堆（英语：heap)是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵树的数组对象。堆总是满足下列性质：  堆中某个节点的值总是不大于或不小于其父节点的值； 堆总是一棵完全二叉树。   堆是一棵特殊的完">
+<meta property="article:published_time" content="2020-04-27T13:46:42.000Z">
+<meta property="article:modified_time" content="2020-04-27T13:46:42.000Z">
+<meta property="article:author" content="老实宇">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/27/jdk中优先队列的实现/"/>
+
+
+
+
+
+  <title>jdk中优先队列的实现 | 老实宇</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4153ebc17b26e540e79b939e5b041be3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老实宇</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/27/jdk%E4%B8%AD%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老实宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实宇">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jdk中优先队列的实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-27T21:46:42+08:00">
+                2020-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk%E6%BA%90%E7%A0%81/" itemprop="url" rel="index">
+                    <span itemprop="name">jdk源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>队列的定义是先进先出（First-In-First-Out）的一个数组，而优先队列(PriorityQueue)则是按照一个优先级出队列。</p>
+<p>优先队列的实现方法是基于堆的。</p>
+<blockquote>
+<p>堆（英语：heap)是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵树的数组对象。堆总是满足下列性质：</p>
+<ul>
+<li>堆中某个节点的值总是不大于或不小于其父节点的值；</li>
+<li>堆总是一棵完全二叉树。</li>
+</ul>
+</blockquote>
+<p>堆是一棵特殊的完全二叉树，最大堆的含义所有节点都满足根节点的大于左右子节点  ，最小堆反之。优先队列的出队行为和拿掉堆顶是一致的。又因为在完全二叉树中根节点和左右子节点的索引(按层次遍历)关系是固定的。<br>$$<br>Index根<em>2+1 = Index左 \<br>Index根</em>2+2 = Index右<br>$$<br>所以没有必要按照平常的树一样去定义左右子节点，用数组就可以模拟堆，这就是优先队列的由来。</p>
+<h4 id="jdk源码里对PriorityQueue的描述"><a href="#jdk源码里对PriorityQueue的描述" class="headerlink" title="jdk源码里对PriorityQueue的描述"></a>jdk源码里对PriorityQueue的描述</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An unbounded priority &#123;<span class="doctag">@linkplain</span> Queue queue&#125; based on a priority heap.</span></span><br><span class="line"><span class="comment"> * The elements of the priority queue are ordered according to their</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@linkplain</span> Comparable natural ordering&#125;, or by a &#123;<span class="doctag">@link</span> Comparator&#125;</span></span><br><span class="line"><span class="comment"> * provided at queue construction time, depending on which constructor is</span></span><br><span class="line"><span class="comment"> * used.  A priority queue does not permit &#123;<span class="doctag">@code</span> null&#125; elements.</span></span><br><span class="line"><span class="comment"> * A priority queue relying on natural ordering also does not permit</span></span><br><span class="line"><span class="comment"> * insertion of non-comparable objects (doing so may result in</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> ClassCastException&#125;).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The &lt;em&gt;head&lt;/em&gt; of this queue is the &lt;em&gt;least&lt;/em&gt; element</span></span><br><span class="line"><span class="comment"> * with respect to the specified ordering.  If multiple elements are</span></span><br><span class="line"><span class="comment"> * tied for least value, the head is one of those elements -- ties are</span></span><br><span class="line"><span class="comment"> * broken arbitrarily.  The queue retrieval operations &#123;<span class="doctag">@code</span> poll&#125;,</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> remove&#125;, &#123;<span class="doctag">@code</span> peek&#125;, and &#123;<span class="doctag">@code</span> element&#125; access the</span></span><br><span class="line"><span class="comment"> * element at the head of the queue.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;A priority queue is unbounded, but has an internal</span></span><br><span class="line"><span class="comment"> * &lt;i&gt;capacity&lt;/i&gt; governing the size of an array used to store the</span></span><br><span class="line"><span class="comment"> * elements on the queue.  It is always at least as large as the queue</span></span><br><span class="line"><span class="comment"> * size.  As elements are added to a priority queue, its capacity</span></span><br><span class="line"><span class="comment"> * grows automatically.  The details of the growth policy are not</span></span><br><span class="line"><span class="comment"> * specified.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This class and its iterator implement all of the</span></span><br><span class="line"><span class="comment"> * &lt;em&gt;optional&lt;/em&gt; methods of the &#123;<span class="doctag">@link</span> Collection&#125; and &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment"> * Iterator&#125; interfaces.  The Iterator provided in method &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment"> * #iterator()&#125; and the Spliterator provided in method &#123;<span class="doctag">@link</span> #spliterator()&#125;</span></span><br><span class="line"><span class="comment"> * are &lt;em&gt;not&lt;/em&gt; guaranteed to traverse the elements of</span></span><br><span class="line"><span class="comment"> * the priority queue in any particular order. If you need ordered</span></span><br><span class="line"><span class="comment"> * traversal, consider using &#123;<span class="doctag">@code</span> Arrays.sort(pq.toArray())&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;&lt;strong&gt;Note that this implementation is not synchronized.&lt;/strong&gt;</span></span><br><span class="line"><span class="comment"> * Multiple threads should not access a &#123;<span class="doctag">@code</span> PriorityQueue&#125;</span></span><br><span class="line"><span class="comment"> * instance concurrently if any of the threads modifies the queue.</span></span><br><span class="line"><span class="comment"> * Instead, use the thread-safe &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment"> * java.util.concurrent.PriorityBlockingQueue&#125; class.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Implementation note: this implementation provides</span></span><br><span class="line"><span class="comment"> * O(log(n)) time for the enqueuing and dequeuing methods</span></span><br><span class="line"><span class="comment"> * (&#123;<span class="doctag">@code</span> offer&#125;, &#123;<span class="doctag">@code</span> poll&#125;, &#123;<span class="doctag">@code</span> remove()&#125; and &#123;<span class="doctag">@code</span> add&#125;);</span></span><br><span class="line"><span class="comment"> * linear time for the &#123;<span class="doctag">@code</span> remove(Object)&#125; and &#123;<span class="doctag">@code</span> contains(Object)&#125;</span></span><br><span class="line"><span class="comment"> * methods; and constant time for the retrieval methods</span></span><br><span class="line"><span class="comment"> * (&#123;<span class="doctag">@code</span> peek&#125;, &#123;<span class="doctag">@code</span> element&#125;, and &#123;<span class="doctag">@code</span> size&#125;).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This class is a member of the</span></span><br><span class="line"><span class="comment"> * &lt;a href="&#123;<span class="doctag">@docRoot</span>&#125;/java.base/java/util/package-summary.html#CollectionsFramework"&gt;</span></span><br><span class="line"><span class="comment"> * Java Collections Framework&lt;/a&gt;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.5</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Josh Bloch, Doug Lea</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;E&gt; the type of elements held in this queue</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>jdk中的优先队列的特点如下。</p>
+<p>放入优先队列里的对象的类型都必须是可比较的，不管是自己实现的比较器还是自然比较。</p>
+<p>队列的队头是按指定比较顺序最小的那个元素，如果相等，则是其中任意一个。</p>
+<p>自动扩容，内部是一个array实现的。</p>
+<p>可迭代。</p>
+<p>线程不安全。PriorityBlockingQueue是线程安全的。</p>
+<p>提供了O(logn)时间复杂度的进队出队方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(&#123;<span class="meta">@code</span> offer&#125;, &#123;<span class="meta">@code</span> poll&#125;, &#123;<span class="meta">@code</span> remove()&#125; and &#123;<span class="meta">@code</span> add&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>和常数级别时间复杂度的检索方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(&#123;<span class="meta">@code</span> peek&#125;, &#123;<span class="meta">@code</span> element&#125;, and &#123;<span class="meta">@code</span> size&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PriorityQueue类的字段和方法"><a href="#PriorityQueue类的字段和方法" class="headerlink" title="PriorityQueue类的字段和方法"></a>PriorityQueue类的字段和方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//继承AbstractQueue 实现Serializable</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PriorityQueue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractQueue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//默认初始化大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">11</span>; </span><br><span class="line"><span class="comment">//底层的堆</span></span><br><span class="line"><span class="keyword">transient</span> Object[] queue;  </span><br><span class="line"><span class="comment">//队列中元素的数量</span></span><br><span class="line"><span class="keyword">int</span> size;</span><br><span class="line"><span class="comment">//比较器</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> E&gt; comparator;</span><br><span class="line"><span class="comment">//修改次数</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br></pre></td></tr></table></figure>
+
+<h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">java.util.PriorityQueue#PriorityQueue()</span><br><span class="line">java.util.PriorityQueue#PriorityQueue(int)</span><br><span class="line">java.util.PriorityQueue#PriorityQueue(java.util.Comparator&lt;? super E&gt;)</span><br><span class="line">java.util.PriorityQueue#PriorityQueue(int, java.util.Comparator&lt;? super E&gt;)</span><br><span class="line">    </span><br><span class="line">java.util.PriorityQueue#PriorityQueue(java.util.Collection&lt;? extends E&gt;)</span><br><span class="line">java.util.PriorityQueue#PriorityQueue(java.util.PriorityQueue&lt;? extends E&gt;)</span><br><span class="line">java.util.PriorityQueue#PriorityQueue(java.util.SortedSet&lt;? extends E&gt;)</span><br></pre></td></tr></table></figure>
+
+<p>前三种构造方法都是调用的第四种构造方法，传进去一个比较器和一个初始化大小。后三种都是将返回一个与参数中的集合元素相同的优先队列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></span><br><span class="line"><span class="function"><span class="params">                     Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Note: This restriction of at least one is not actually needed,</span></span><br><span class="line">    <span class="comment">// but continues for 1.5 compatibility</span></span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.queue = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    <span class="keyword">this</span>.comparator = comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="add"><a href="#add" class="headerlink" title="add"></a>add</h4><p>向优先队列中添加某个元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> offer(e);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();  <span class="comment">//队列中不可加null</span></span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">int</span> i = size;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= queue.length)</span><br><span class="line">        grow(i + <span class="number">1</span>);   <span class="comment">//扩容</span></span><br><span class="line">    siftUp(i, e);      <span class="comment">//向上排序 与父节点比较</span></span><br><span class="line">    size = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">* <span class="meta">@param</span> k the position to fill  <span class="comment">//初始为队列末端</span></span><br><span class="line">* <span class="meta">@param</span> x the item to insert</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUp</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</span><br><span class="line">        siftUpUsingComparator(k, x, queue, comparator);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        siftUpComparable(k, x, queue);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">siftUpComparable</span><span class="params">(<span class="keyword">int</span> k, T x, Object[] es)</span> </span>&#123;</span><br><span class="line">    Comparable&lt;? <span class="keyword">super</span> T&gt; key = (Comparable&lt;? <span class="keyword">super</span> T&gt;) x; </span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;    					<span class="comment">//将插入的元素一直比较到二叉树的根节点</span></span><br><span class="line">        <span class="keyword">int</span> parent = (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;     <span class="comment">//完全二叉树的父节点和子节点的索引关系</span></span><br><span class="line">        Object e = es[parent];</span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((T) e) &gt;= <span class="number">0</span>)  <span class="comment">//true 符合小顶堆的规则  false 不符合</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        es[k] = e;   					<span class="comment">//父节点下移</span></span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    es[k] = key;						<span class="comment">//合适的位置插入元素</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h4><p>删除优先队列中某个元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = indexOf(o);   </span><br><span class="line">    <span class="keyword">if</span> (i == -<span class="number">1</span>) </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        removeAt(i);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">E <span class="title">removeAt</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert i &gt;= 0 &amp;&amp; i &lt; size;</span></span><br><span class="line">    <span class="keyword">final</span> Object[] es = queue;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">int</span> s = --size;</span><br><span class="line">    <span class="keyword">if</span> (s == i) 					<span class="comment">// removed last element</span></span><br><span class="line">        es[i] = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        E moved = (E) es[s]; </span><br><span class="line">        es[s] = <span class="keyword">null</span>;</span><br><span class="line">        siftDown(i, moved);        <span class="comment">//向下排序 与子节点比较</span></span><br><span class="line">        <span class="keyword">if</span> (es[i] == moved) &#123;</span><br><span class="line">            siftUp(i, moved);      <span class="comment">//向上排序 与父节点比较(对应siftDownComparable中直接覆盖无节点的情况)</span></span><br><span class="line">            <span class="keyword">if</span> (es[i] != moved)</span><br><span class="line">                <span class="keyword">return</span> moved;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftDown</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</span><br><span class="line">        siftDownUsingComparator(k, x, queue, size, comparator);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        siftDownComparable(k, x, queue, size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">siftDownComparable</span><span class="params">(<span class="keyword">int</span> k, T x, Object[] es, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert n &gt; 0;</span></span><br><span class="line">    Comparable&lt;? <span class="keyword">super</span> T&gt; key = (Comparable&lt;? <span class="keyword">super</span> T&gt;)x;</span><br><span class="line">    <span class="keyword">int</span> half = n &gt;&gt;&gt; <span class="number">1</span>;           	<span class="comment">// loop while a non-leaf</span></span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;			  	</span><br><span class="line">        <span class="comment">//判断此点是否还有子节点</span></span><br><span class="line">        <span class="comment">//若没有，队列最后一个节点直接覆盖此点</span></span><br><span class="line">        <span class="comment">//若有，此点的较小子节点覆盖此点，循环继续处理较小子节点</span></span><br><span class="line">        <span class="keyword">int</span> child = (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>; 	<span class="comment">// assume left child is least</span></span><br><span class="line">        Object c = es[child];</span><br><span class="line">        <span class="keyword">int</span> right = child + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (right &lt; n &amp;&amp;</span><br><span class="line">            ((Comparable&lt;? <span class="keyword">super</span> T&gt;) c).compareTo((T) es[right]) &gt; <span class="number">0</span>)</span><br><span class="line">            c = es[child = right];   <span class="comment">//选取左右子节点较小的那个覆盖到要删除的点</span></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((T) c) &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        es[k] = c;					<span class="comment">//子节点上移</span></span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    es[k] = key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="peek"><a href="#peek" class="headerlink" title="peek"></a>peek</h4><p>返回优先队列的队头</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (E) queue[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h4><p>返回并删除队头。取到队头，再remove队头。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">poll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Object[] es;</span><br><span class="line">    <span class="keyword">final</span> E result;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((result = (E) ((es = queue)[<span class="number">0</span>])) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> n;</span><br><span class="line">        <span class="keyword">final</span> E x = (E) es[(n = --size)];</span><br><span class="line">        es[n] = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> E&gt; cmp;</span><br><span class="line">            <span class="keyword">if</span> ((cmp = comparator) == <span class="keyword">null</span>)</span><br><span class="line">                siftDownComparable(<span class="number">0</span>, x, es, n);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                siftDownUsingComparator(<span class="number">0</span>, x, es, n, cmp);  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> oldCapacity = queue.length;</span><br><span class="line">        <span class="comment">// Double size if small; else grow by 50%</span></span><br><span class="line">        <span class="keyword">int</span> newCapacity = ArraysSupport.newLength(oldCapacity,</span><br><span class="line">                minCapacity - oldCapacity, <span class="comment">/* minimum growth */</span></span><br><span class="line">                oldCapacity &lt; <span class="number">64</span> ? oldCapacity + <span class="number">2</span> : oldCapacity &gt;&gt; <span class="number">1</span></span><br><span class="line">                                           <span class="comment">/* preferred growth */</span>);</span><br><span class="line">        queue = Arrays.copyOf(queue, newCapacity);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//容量小于64时，扩容之后为旧容量的一倍再加2，大于等于64时，容量扩容为旧容量的1.5倍。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><h4 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h4><p>下面的堆排方法基本上是借鉴了PriorityQueue的<strong>siftDownComparable</strong>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sortArray(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length / <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            nums = makeHeap(nums, i, nums.length - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length-<span class="number">1</span>; i &gt;<span class="number">0</span> ; i--) &#123;</span><br><span class="line">            exchange(i,nums);</span><br><span class="line">            makeHeap(nums,<span class="number">0</span>,i-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] makeHeap(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> parent, <span class="keyword">int</span> len) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = nums[parent];</span><br><span class="line">        <span class="keyword">int</span> child =  (parent&lt;&lt;<span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (child &lt;= len) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child &lt; len &amp;&amp; nums[child] &lt; nums[child + <span class="number">1</span>]) &#123;</span><br><span class="line">                child++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (temp &gt; nums[child]) <span class="keyword">break</span>;</span><br><span class="line">            nums[parent] = nums[child];</span><br><span class="line">            parent = child;</span><br><span class="line">        	child =  (parent&lt;&lt;<span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[parent]=temp;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exchange</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = nums[<span class="number">0</span>];</span><br><span class="line">        nums[<span class="number">0</span>] = nums[i];</span><br><span class="line">        nums[i] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然直接调PriorityQueue类也可，但是考察到堆排了，这么写有点说不过去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sortArray(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        PriorityQueue&lt;Integer&gt; priorityQueue = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            priorityQueue.add(num);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> i =<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (!priorityQueue.isEmpty())&#123;</span><br><span class="line">            nums[i]=priorityQueue.poll();</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="TopK"><a href="#TopK" class="headerlink" title="TopK"></a>TopK</h4><p>第K大的数，出现次数第K多的元素等等</p>
+<blockquote>
+<h5 id="347-前-K-个高频元素"><a href="#347-前-K-个高频元素" class="headerlink" title="347. 前 K 个高频元素"></a><a href="https://leetcode-cn.com/problems/top-k-frequent-elements/" target="_blank" rel="noopener">347. 前 K 个高频元素</a></h5><p>难度中等319</p>
+<p>给定一个非空的整数数组，返回其中出现频率前 <strong><em>k\</em></strong> 高的元素。</p>
+<p>示例 1:</p>
+<p>输入: nums = [1,1,1,2,2,3], k = 2<br>输出: [1,2]<br>示例 2:</p>
+<p>输入: nums = [1], k = 1<br>输出: [1]</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 前<span class="title">K</span>个高频元素<span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] topKFrequent(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k) &#123;</span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num :</span><br><span class="line">                nums) &#123;</span><br><span class="line">            map.put(num, !map.containsKey(num) ? <span class="number">1</span> : map.get(num) + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        PriorityQueue&lt;Entry&lt;Integer, Integer&gt;&gt; queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;((o1, o2) -&gt; -Integer.compare(o1.getValue(), o2.getValue()));</span><br><span class="line">        queue.addAll(map.entrySet());</span><br><span class="line">        <span class="keyword">int</span>[] res = <span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            res[i] = queue.poll().getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="丑数问题"><a href="#丑数问题" class="headerlink" title="丑数问题"></a>丑数问题</h4><blockquote>
+<p><a href="https://leetcode-cn.com/problems/ugly-number-ii/" target="_blank" rel="noopener">264. 丑数 II</a></p>
+<p>难度中等263</p>
+<p>编写一个程序，找出第 <code>n</code> 个丑数。</p>
+<p>丑数就是只包含质因数 <code>2, 3, 5</code> 的<strong>正整数</strong>。</p>
+<p><strong>示例:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: n &#x3D; 10</span><br><span class="line">&gt;输出: 12</span><br><span class="line">&gt;解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明:</strong> </p>
+<ol>
+<li><code>1</code> 是丑数。</li>
+<li><code>n</code> <strong>不超过</strong>1690。</li>
+</ol>
+</blockquote>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nthUglyNumber</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        PriorityQueue&lt;Long&gt; queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        queue.add(<span class="number">1L</span>);</span><br><span class="line">        <span class="keyword">long</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span>[] nums = &#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            res = queue.poll();</span><br><span class="line">            <span class="keyword">while</span> (!queue.isEmpty() &amp;&amp; res == queue.peek()) &#123;</span><br><span class="line">                res = queue.poll();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> num :</span><br><span class="line">                    nums) &#123;</span><br><span class="line">                queue.add(res * num);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意res可能会溢出，用Long。</p>
+<p>但是这题用堆/优先队列去做的话，是有点慢的，因为要牵扯到大量的数组元素的移动来保持数组符合堆/优先队列的定义。比如说第一轮循环，数组已经是[2,3,5]，第二轮的2×2得到的4入堆/优先队列就不得不移动元素了。</p>
+<p>而且有一定的重复计算，比如说6这个数，2(丑数)×3，3(丑数)×2都可以得到，不得不添加一个while循环来去重。效率如下</p>
+<blockquote>
+<p>执行结果：</p>
+<p>通过</p>
+<p>显示详情</p>
+<p>执行用时 :108 ms, 在所有 Java 提交中击败了11.29%的用户</p>
+<p>内存消耗 :39.4 MB, 在所有 Java 提交中击败了8.33%的用户</p>
+</blockquote>
+<p>很多人会选择用类似动态规划的三指针方法做，这也是《剑指offer》那本书上的做法。</p>
+<p>这种方法放入dp数组的元素已经是有序的丑数了，没有像堆/优先队列一样的大量的移动元素。而且minVal只有一个，即使求出来的三个丑数有相同的值，被放入dp数组的也只有一个，完成了去重。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nthUglyNumber2</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        Arrays.fill(dp, <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> cur1 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> cur2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> cur3 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">            dp[i] = Math.min(dp[cur1] * <span class="number">2</span>, Math.min(dp[cur2] * <span class="number">3</span>, dp[cur3] * <span class="number">5</span>));</span><br><span class="line">            <span class="keyword">if</span> (dp[cur1] * <span class="number">2</span> == dp[i]) cur1++;</span><br><span class="line">            <span class="keyword">if</span> (dp[cur2] * <span class="number">3</span> == dp[i]) cur2++;</span><br><span class="line">            <span class="keyword">if</span> (dp[cur3] * <span class="number">5</span> == dp[i]) cur3++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[dp.length-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>执行结果：</p>
+<p>通过</p>
+<p>显示详情</p>
+<p>执行用时 :3 ms, 在所有 Java 提交中击败了88.17%的用户</p>
+<p>内存消耗 :38 MB, 在所有 Java 提交中击败了8.33%的用户</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/27/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E3%80%8B%E4%BD%9C%E4%B8%9A%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="next" title="《数据库系统基础》作业（二）">
+                <i class="fa fa-chevron-left"></i> 《数据库系统基础》作业（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/30/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/" rel="prev" title="进程调度算法">
+                进程调度算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老实宇</p>
+              <p class="site-description motion-element" itemprop="description">你在第二层,以为我是第一层,实际上我在第五层</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jdk源码里对PriorityQueue的描述"><span class="nav-number">1.2.</span> <span class="nav-text">jdk源码里对PriorityQueue的描述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PriorityQueue类的字段和方法"><span class="nav-number">2.</span> <span class="nav-text">PriorityQueue类的字段和方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#字段"><span class="nav-number">2.1.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#add"><span class="nav-number">2.3.</span> <span class="nav-text">add</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#remove"><span class="nav-number">2.4.</span> <span class="nav-text">remove</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#peek"><span class="nav-number">2.5.</span> <span class="nav-text">peek</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#poll"><span class="nav-number">2.6.</span> <span class="nav-text">poll</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#扩容"><span class="nav-number">2.7.</span> <span class="nav-text">扩容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例题"><span class="nav-number">3.</span> <span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#堆排序"><span class="nav-number">3.1.</span> <span class="nav-text">堆排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TopK"><span class="nav-number">3.2.</span> <span class="nav-text">TopK</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#347-前-K-个高频元素"><span class="nav-number">3.2.1.</span> <span class="nav-text">347. 前 K 个高频元素</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#丑数问题"><span class="nav-number">3.3.</span> <span class="nav-text">丑数问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老实宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.staticfile.org/MathJax/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

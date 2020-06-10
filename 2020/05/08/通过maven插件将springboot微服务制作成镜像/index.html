@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="制作jdk1.8的镜像作为微服务的基础镜像将jdk压缩包和Dockerfile上传到虚拟机。路径为 &#x2F;usr&#x2F;local&#x2F;dockerjdk8  dockerfile内容 1234567891011121314#依赖镜像名称和IDFROM centos:latest#指定镜像创建者信息MAINTAINER wangyu#切换工作目录WORKDIR &#x2F;usrRUN mkdir &#x2F;usr&#x2F;local&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过maven插件将springboot微服务制作成镜像">
+<meta property="og:url" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/index.html">
+<meta property="og:site_name" content="老实宇">
+<meta property="og:description" content="制作jdk1.8的镜像作为微服务的基础镜像将jdk压缩包和Dockerfile上传到虚拟机。路径为 &#x2F;usr&#x2F;local&#x2F;dockerjdk8  dockerfile内容 1234567891011121314#依赖镜像名称和IDFROM centos:latest#指定镜像创建者信息MAINTAINER wangyu#切换工作目录WORKDIR &#x2F;usrRUN mkdir &#x2F;usr&#x2F;local&#x2F;">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C1.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C2.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C3.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C4.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C5.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C6.png">
+<meta property="article:published_time" content="2020-05-08T12:33:44.000Z">
+<meta property="article:modified_time" content="2020-05-08T12:33:44.000Z">
+<meta property="article:author" content="老实宇">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/08/通过maven插件将springboot微服务制作成镜像/"/>
+
+
+
+
+
+  <title>通过maven插件将springboot微服务制作成镜像 | 老实宇</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4153ebc17b26e540e79b939e5b041be3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老实宇</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/08/%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老实宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实宇">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">通过maven插件将springboot微服务制作成镜像</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-08T20:33:44+08:00">
+                2020-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="制作jdk1-8的镜像作为微服务的基础镜像"><a href="#制作jdk1-8的镜像作为微服务的基础镜像" class="headerlink" title="制作jdk1.8的镜像作为微服务的基础镜像"></a>制作jdk1.8的镜像作为微服务的基础镜像</h4><h5 id="将jdk压缩包和Dockerfile上传到虚拟机。"><a href="#将jdk压缩包和Dockerfile上传到虚拟机。" class="headerlink" title="将jdk压缩包和Dockerfile上传到虚拟机。"></a>将jdk压缩包和Dockerfile上传到虚拟机。</h5><p>路径为 /usr/local/dockerjdk8</p>
+<p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C1.png" alt=""></p>
+<p>dockerfile内容</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#依赖镜像名称和ID</span></span><br><span class="line"><span class="keyword">FROM</span> centos:latest</span><br><span class="line"><span class="comment">#指定镜像创建者信息</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> wangyu</span><br><span class="line"><span class="comment">#切换工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> mkdir /usr/<span class="built_in">local</span>/java</span></span><br><span class="line"><span class="comment">#ADD 是相对路径jar,把java添加到容器中</span></span><br><span class="line"><span class="keyword">ADD</span><span class="bash"> jdk-8u171-linux-x64.tar.gz /usr/<span class="built_in">local</span>/java/</span></span><br><span class="line"><span class="comment">#配置java环境变量</span></span><br><span class="line"><span class="keyword">ENV</span> JAVA_HOME /usr/local/java/jdk1.<span class="number">8.0</span>_171</span><br><span class="line"><span class="keyword">ENV</span> JRE_HOME $JAVA_HOME/jre</span><br><span class="line"><span class="keyword">ENV</span> CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH</span><br><span class="line"><span class="keyword">ENV</span> PATH $JAVA_HOME/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="创建镜像"><a href="#创建镜像" class="headerlink" title="创建镜像"></a>创建镜像</h5><p>执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build ‐t='jdk1.8' .</span><br></pre></td></tr></table></figure>
+
+<h5 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C2.png" alt=""></p>
+<p>这是我上传到私人仓库又pull下来的，所以名称变了</p>
+<h4 id="制作微服务镜像"><a href="#制作微服务镜像" class="headerlink" title="制作微服务镜像"></a>制作微服务镜像</h4><h5 id="修改宿主机的docker配置"><a href="#修改宿主机的docker配置" class="headerlink" title="修改宿主机的docker配置"></a>修改宿主机的docker配置</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /lib/systemd/system/docker.service</span><br></pre></td></tr></table></figure>
+
+<p>增加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock</span><br></pre></td></tr></table></figure>
+
+<p>并注释掉原配置，让其可以远程访问</p>
+<h5 id="在包的pom-xml引入maven的docker插件"><a href="#在包的pom-xml引入maven的docker插件" class="headerlink" title="在包的pom.xml引入maven的docker插件"></a>在包的pom.xml引入maven的docker插件</h5><p>dockerHost和baseImage根据自己的宿主机的实际情况进行修改 其他不需要修改。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spotify<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>docker-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>build-image<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>$&#123;project.artifactId&#125;:$&#123;project.version&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dockerHost</span>&gt;</span>http://192.168.0.13:2375<span class="tag">&lt;/<span class="name">dockerHost</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">baseImage</span>&gt;</span>192.168.0.13:5000/jdk1.8<span class="tag">&lt;/<span class="name">baseImage</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">entryPoint</span>&gt;</span>["java", "-jar","/$&#123;project.build.finalName&#125;.jar"]<span class="tag">&lt;/<span class="name">entryPoint</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span>/<span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.build.directory&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>$&#123;project.build.finalName&#125;.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="一键打包"><a href="#一键打包" class="headerlink" title="一键打包"></a>一键打包</h5><p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C3.png" alt=""></p>
+<h5 id="查看镜像-1"><a href="#查看镜像-1" class="headerlink" title="查看镜像"></a>查看镜像</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C4.png" alt=""></p>
+<h5 id="制作容器"><a href="#制作容器" class="headerlink" title="制作容器"></a>制作容器</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=xxx -p 12000:12000 550c1221d06c</span><br><span class="line"></span><br><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+
+<p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C5.png" alt=""></p>
+<p>访问容器暴露的地址，发现成功。</p>
+<p><img src="%E9%80%9A%E8%BF%87maven%E6%8F%92%E4%BB%B6%E5%B0%86springboot%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%B6%E4%BD%9C%E6%88%90%E9%95%9C%E5%83%8F%5C6.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/07/%E5%8D%95%E8%AF%8D%E6%8B%86%E5%88%86/" rel="next" title="单词拆分">
+                <i class="fa fa-chevron-left"></i> 单词拆分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/14/%E5%BF%AB%E9%80%9F%E5%B9%82/" rel="prev" title="快速幂">
+                快速幂 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老实宇</p>
+              <p class="site-description motion-element" itemprop="description">你在第二层,以为我是第一层,实际上我在第五层</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#制作jdk1-8的镜像作为微服务的基础镜像"><span class="nav-number">1.</span> <span class="nav-text">制作jdk1.8的镜像作为微服务的基础镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#将jdk压缩包和Dockerfile上传到虚拟机。"><span class="nav-number">1.1.</span> <span class="nav-text">将jdk压缩包和Dockerfile上传到虚拟机。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建镜像"><span class="nav-number">1.2.</span> <span class="nav-text">创建镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看镜像"><span class="nav-number">1.3.</span> <span class="nav-text">查看镜像</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#制作微服务镜像"><span class="nav-number">2.</span> <span class="nav-text">制作微服务镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#修改宿主机的docker配置"><span class="nav-number">2.1.</span> <span class="nav-text">修改宿主机的docker配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在包的pom-xml引入maven的docker插件"><span class="nav-number">2.2.</span> <span class="nav-text">在包的pom.xml引入maven的docker插件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一键打包"><span class="nav-number">2.3.</span> <span class="nav-text">一键打包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看镜像-1"><span class="nav-number">2.4.</span> <span class="nav-text">查看镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#制作容器"><span class="nav-number">2.5.</span> <span class="nav-text">制作容器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老实宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
