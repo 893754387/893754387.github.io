@@ -85,18 +85,18 @@
 <meta property="og:url" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="老实宇">
 <meta property="og:description" content="TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。  TCP协议 TCP通过下列方式来提供可靠性：  1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。 2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认">
-<meta property="og:image" content="http://yoursite.com/.com//1.png">
-<meta property="og:image" content="http://yoursite.com/.com//2.png">
-<meta property="og:image" content="http://yoursite.com/.com//3.png">
-<meta property="og:image" content="http://yoursite.com/.com//4.png">
-<meta property="og:image" content="http://yoursite.com/.com//5.png">
-<meta property="og:image" content="http://yoursite.com/.com//6.png">
-<meta property="og:image" content="http://yoursite.com/.com//7.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/7.png">
 <meta property="article:published_time" content="2020-06-01T15:34:34.000Z">
 <meta property="article:modified_time" content="2020-06-01T15:34:34.000Z">
 <meta property="article:author" content="老实宇">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/.com//1.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/1.png">
 
 
 
@@ -359,7 +359,7 @@
 <p>5．既然IP数据报会发生重复，TCP的接收端必须丢弃重复的数据。</p>
 <p>6．TCP还能提供流量控制。TCP连接的每一方都有固定大小的缓冲空间。TCP的接收端只允许另一端发送接收端缓冲区所能接纳的数据。这将防止较快主机致使较慢主机的缓冲区溢出。</p>
 </blockquote>
-<h3 id="TCP报文段"><a href="#TCP报文段" class="headerlink" title="TCP报文段"></a>TCP报文段</h3><h4 id="首部格式"><a href="#首部格式" class="headerlink" title="首部格式"></a>首部格式</h4><p><img src="/.com//1.png" alt="45AFEE5E371DC4319A0630795D0FFC85"></p>
+<h3 id="TCP报文段"><a href="#TCP报文段" class="headerlink" title="TCP报文段"></a>TCP报文段</h3><h4 id="首部格式"><a href="#首部格式" class="headerlink" title="首部格式"></a>首部格式</h4><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/1.png" alt="45AFEE5E371DC4319A0630795D0FFC85"></p>
 <h4 id="各字段的含义"><a href="#各字段的含义" class="headerlink" title="各字段的含义"></a>各字段的含义</h4><p>源端口 目标端口：TCP协议通过端口号识别源端和目标端的应用程序。端口占16位， 0-65535之间的数字。</p>
 <p><strong>序号seq：TCP连接中传输的字节流的字节都按顺序编号以保证数据的有序性，序号字段表示本报文段所发送数据的第一个字节的序号。</strong></p>
 <p><strong>确认号ack：期望收到对方下一个报文段的第一个数据字节的序号。确认号为x,那么0到x-1的数据全部正确收到。</strong></p>
@@ -374,7 +374,7 @@
 <p>复位RST：RST=1时，标明TCP连接中出现严重差错，必须释放连接，然后再重新建立连接。</p>
 <p><strong>同步位SYN：SYN=1时，标明是一个连接请求/连接接收报文。</strong></p>
 <p><strong>终止位FIN：FIN=1时，标明此报文段发送方数据已经发完，要求释放连接。</strong></p>
-<h3 id="TCP连接建立和释放"><a href="#TCP连接建立和释放" class="headerlink" title="TCP连接建立和释放"></a>TCP连接建立和释放</h3><h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p><img src="/.com//2.png" alt="8DA7DA49D3E5FB5B148302B1DF9A3B56"></p>
+<h3 id="TCP连接建立和释放"><a href="#TCP连接建立和释放" class="headerlink" title="TCP连接建立和释放"></a>TCP连接建立和释放</h3><h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/2.png" alt="8DA7DA49D3E5FB5B148302B1DF9A3B56"></p>
 <p><strong>ROUND 1</strong></p>
 <p>客户端发送<strong>连接请求报文段</strong>。无应用层数据。</p>
 <p>​     <code>SYN=1 seq=x(随机)</code> </p>
@@ -416,7 +416,7 @@
 <p>如果第一次握手携带数据，那么发送方完全可以不理会服务端的接收能力，一直发送握手报文，造成了资源浪费。</p>
 <p>第二次握手携带数据的话，服务端也是无法识别客户端是不是恶意攻击，会放大泛洪攻    。</p>
 <p>第三次握手可以携带数据，因为已经可以证明客户端收到了第二次握手的报文，它是一个正常客户端，不是虚拟的。</p>
-<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p><img src="/.com//3.png" alt="469E5C30699E1FDD3E22780808F5714C"></p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/3.png" alt="469E5C30699E1FDD3E22780808F5714C"></p>
 <p><strong>ROUND 1</strong></p>
 <p>客户端发送<strong>连接释放报文段</strong>，停止发送数据，主动关闭TCP连接。</p>
 <p><code>FIN=1 seq=u</code></p>
@@ -438,11 +438,11 @@
 <h4 id="TCP数据传输的可靠性"><a href="#TCP数据传输的可靠性" class="headerlink" title="TCP数据传输的可靠性"></a>TCP数据传输的可靠性</h4><h5 id="校验"><a href="#校验" class="headerlink" title="校验"></a>校验</h5><p>发送端：</p>
 <p>1.在数据报前加伪首部，如下。 </p>
 <p>TCP校验时，协议号17改为8，UDP数据报长度改为TCP数据报长度</p>
-<p><img src="/.com//4.png" alt="54CECEC0BABB05E6FD50B8F6BC3CCBDD"></p>
+<p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/4.png" alt="54CECEC0BABB05E6FD50B8F6BC3CCBDD"></p>
 <p>2.校验和字段填充0</p>
 <p>3.数据字段补0对齐</p>
 <p>4.伪首部+首部+数据部分进行反码相加。</p>
-<p><img src="/.com//5.png" alt="F373808C7C54DA7A3074781CE33614B8"></p>
+<p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/5.png" alt="F373808C7C54DA7A3074781CE33614B8"></p>
 <p>5.把结果填充到校验和</p>
 <p>6.去掉伪首部，发送</p>
 <p>接收端：</p>
@@ -458,9 +458,9 @@
 <p>无需关心超时定时器，当比期待的序号大的报文段到达接收方时，接收方会发送一个<strong>冗余ACK</strong>，当发送方收到三个冗余ACK时，代表报文段丢失了。</p>
 <h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>发送方只能发送接收方指定窗口大小的字节数。</p>
 <p>当收到0窗口报文时，不能再发数据。此时发送方启动一个持续计时器，时间到时，发送方会发送一个<strong>探测报文段</strong>，接收方会回复一个现在的窗口值，若是0，持续计时器重新开始计时。</p>
-<h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><h5 id="慢开始-拥塞避免"><a href="#慢开始-拥塞避免" class="headerlink" title="慢开始+拥塞避免"></a>慢开始+拥塞避免</h5><p><img src="/.com//6.png" alt="FF2E8BC1C76FCD814F62E45505CE853F"></p>
+<h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><h5 id="慢开始-拥塞避免"><a href="#慢开始-拥塞避免" class="headerlink" title="慢开始+拥塞避免"></a>慢开始+拥塞避免</h5><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/6.png" alt="FF2E8BC1C76FCD814F62E45505CE853F"></p>
 <p>（1）TCP连接初始化，将拥塞窗口设置为1<br>（2）执行慢开始算法，cwnd按指数规律增长，直到cwnd=ssthresh时，开始执行拥塞避免算法，cwnd按线性规律增长<br>（3）当网络发生拥塞，把ssthresh值更新为拥塞前ssthresh值的一半，cwnd重新设置为1，按照步骤（2）执行</p>
-<h5 id="快重传-快恢复"><a href="#快重传-快恢复" class="headerlink" title="快重传+快恢复"></a><strong>快重传+快恢复</strong></h5><p><img src="/.com//7.png" alt="5839169975F8458CF87013331A43248A"></p>
+<h5 id="快重传-快恢复"><a href="#快重传-快恢复" class="headerlink" title="快重传+快恢复"></a><strong>快重传+快恢复</strong></h5><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/7.png" alt="5839169975F8458CF87013331A43248A"></p>
 <p>（1）当发送方连续收到三个重复确认，就执行“乘法减小”算法，把慢开始门限ssthresh减半。这是为了预防网络发生拥塞。请注意：接下去不执行慢开始算法。<br>（2）由于发送方现在认为网络很可能没有发生拥塞，因此与慢开始不同之处是现在不执行慢开始算法（即拥塞窗口cwnd现在不设置为1），而是把cwnd值设置为慢开始门限ssthresh减半后的数值，然后开始执行拥塞避免算法（“加法增大”），使拥塞窗口缓慢地线性增大。</p>
 <h4 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">发送方窗口的上限值 &#x3D; Min [ rwnd, cwnd ]</span><br></pre></td></tr></table></figure>
 
