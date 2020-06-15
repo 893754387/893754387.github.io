@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="高效读写的并发安全的无界单向队列继承关系 可以看到ConcurrentLinkedQueue继承了集合类 并且底层由Node节点储存内容，还有并发容器的迭代器组成 Node节点就是一个单向链表的节点，内容和next指向下一个节点，还有一些unsafe的CAS操作，还有拿到了节点item和next 的偏移量，以供后续的cas操作使用。 12345678910111213141516171819202">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConcurrentLinkedQueue源码阅读">
+<meta property="og:url" content="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.html">
+<meta property="og:site_name" content="老实宇">
+<meta property="og:description" content="高效读写的并发安全的无界单向队列继承关系 可以看到ConcurrentLinkedQueue继承了集合类 并且底层由Node节点储存内容，还有并发容器的迭代器组成 Node节点就是一个单向链表的节点，内容和next指向下一个节点，还有一些unsafe的CAS操作，还有拿到了节点item和next 的偏移量，以供后续的cas操作使用。 12345678910111213141516171819202">
+<meta property="og:image" content="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/1.jpeg">
+<meta property="og:image" content="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/2.jpeg">
+<meta property="article:published_time" content="2020-06-15T14:39:38.588Z">
+<meta property="article:modified_time" content="2020-06-15T14:41:26.672Z">
+<meta property="article:author" content="老实宇">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue源码阅读/"/>
+
+
+
+
+
+  <title>ConcurrentLinkedQueue源码阅读 | 老实宇</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4153ebc17b26e540e79b939e5b041be3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老实宇</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老实宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实宇">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ConcurrentLinkedQueue源码阅读</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-15T22:39:38+08:00">
+                2020-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="高效读写的并发安全的无界单向队列"><a href="#高效读写的并发安全的无界单向队列" class="headerlink" title="高效读写的并发安全的无界单向队列"></a>高效读写的并发安全的无界单向队列</h2><h3 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h3><p><img src="/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/3.png" alt></p>
+<p>可以看到ConcurrentLinkedQueue继承了集合类 并且底层由Node节点储存内容，还有并发容器的迭代器组成</p>
+<h3 id="Node节点"><a href="#Node节点" class="headerlink" title="Node节点"></a>Node节点</h3><p>就是一个单向链表的节点，内容和next指向下一个节点，还有一些unsafe的CAS操作，还有拿到了节点item和next 的偏移量，以供后续的cas操作使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">volatile</span> E item;</span><br><span class="line">    <span class="keyword">volatile</span> Node&lt;E&gt; next;</span><br><span class="line">  </span><br><span class="line">    Node(E item) &#123;</span><br><span class="line">        UNSAFE.putObject(<span class="keyword">this</span>, itemOffset, item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">casItem</span><span class="params">(E cmp, E val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> UNSAFE.compareAndSwapObject(<span class="keyword">this</span>, itemOffset, cmp, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lazySetNext</span><span class="params">(Node&lt;E&gt; val)</span> </span>&#123;</span><br><span class="line">        UNSAFE.putOrderedObject(<span class="keyword">this</span>, nextOffset, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">casNext</span><span class="params">(Node&lt;E&gt; cmp, Node&lt;E&gt; val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> UNSAFE.compareAndSwapObject(<span class="keyword">this</span>, nextOffset, cmp, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> sun.misc.Unsafe UNSAFE;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> itemOffset;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> nextOffset;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123; <span class="comment">//静态代码块得到 item和next的偏移量</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            UNSAFE = sun.misc.Unsafe.getUnsafe();  </span><br><span class="line">            Class&lt;?&gt; k = Node<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">            itemOffset = UNSAFE.objectFieldOffset</span><br><span class="line">                (k.getDeclaredField(<span class="string">"item"</span>));</span><br><span class="line">            nextOffset = UNSAFE.objectFieldOffset</span><br><span class="line">                (k.getDeclaredField(<span class="string">"next"</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Error(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="入队列"><a href="#入队列" class="headerlink" title="入队列"></a>入队列</h3><p><img src="/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/1.jpeg" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> offer(e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">  checkNotNull(e);  <span class="comment">//若为空 抛出空指针异常</span></span><br><span class="line">  <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;E&gt;(e);   <span class="comment">//封装成节点</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (Node&lt;E&gt; t = tail, p = t;;) &#123;   <span class="comment">//寻找最后一个节点</span></span><br><span class="line">    Node&lt;E&gt; q = p.next;   			</span><br><span class="line">    <span class="keyword">if</span> (q == <span class="keyword">null</span>) &#123;     <span class="comment">//q是否是最后一个节点</span></span><br><span class="line">      <span class="keyword">if</span> (p.casNext(<span class="keyword">null</span>, newNode)) &#123;  		</span><br><span class="line">        <span class="keyword">if</span> (p != t) <span class="comment">// 每两次新增节点 更新一下tail节点</span></span><br><span class="line">          casTail(t, newNode);  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (p == q)   <span class="comment">//自连接节点  自链接节点主要是些要删除的节点  无法通过这些点拿到next的</span></span><br><span class="line">      p = (t != (t = tail)) ? t : head;    <span class="comment">//下面分析</span></span><br><span class="line">    <span class="keyword">else</span>               <span class="comment">//p不是最后一个节点</span></span><br><span class="line">      p = (p != t &amp;&amp; t != (t = tail)) ? t : q;    <span class="comment">//下面分析</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//cás修改next指向 期待是null 更新值是newNode</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">casNext</span><span class="params">(Node&lt;E&gt; cmp, Node&lt;E&gt; val)</span> </span>&#123;  </span><br><span class="line">  <span class="keyword">return</span> UNSAFE.compareAndSwapObject(<span class="keyword">this</span>, nextOffset, cmp, val);<span class="comment">//将newNode赋给p的next指针指向的偏移量 即next指向newNode</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//cas修改尾节点  期待是t  更新值是newNode</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">casTail</span><span class="params">(Node&lt;E&gt; cmp, Node&lt;E&gt; val)</span> </span>&#123;  <span class="comment">//t newNode</span></span><br><span class="line">  <span class="keyword">return</span> UNSAFE.compareAndSwapObject(<span class="keyword">this</span>, tailOffset, cmp, val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">p &#x3D; (t !&#x3D; (t &#x3D; tail)) ? t : head;  </span><br><span class="line">上文已经说了此时 无法通过自连接节点拿到next的偏移量的 这时可以从头遍历找tail节点，但是这显然比较耗时，于是在juc设计的是再看一下有没有新的tail节点</span><br><span class="line">执行&#96;!&#x3D;&#96;操作时，先拿到等号左边t的值，再进行等号右侧的赋值操作</span><br><span class="line">多线程的情况下，别的线程如果没有修改了tail节点，此时 t&#x3D;&#x3D;t 只能拿着head节点进行遍历</span><br><span class="line">如果别的线程已经修改了新的tail，那直接拿这个新的tail赋给p，拿着新的tail节点找最后一个节点</span><br><span class="line"></span><br><span class="line">p &#x3D; (p !&#x3D; t &amp;&amp; t !&#x3D; (t &#x3D; tail)) ? t : q;</span><br><span class="line">与上面的类似，也是检查有没有别的线程更新tail节点 若</span><br><span class="line">有的话 将新的tail节点赋给p  继续按照新的tail节点寻找最后一个节点</span><br><span class="line">若没有 p的下一个节点一定是最后一个节点（每两次新增更新一次tail节点，tail节点要么是最后一个要么是倒数第二个）</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="出队列"><a href="#出队列" class="headerlink" title="出队列"></a>出队列</h3><p><img src="/2020/06/15/ConcurrentLinkedQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/2.jpeg" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">poll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  restartFromHead:</span><br><span class="line">  <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">    <span class="keyword">for</span> (Node&lt;E&gt; h = head, p = h, q;;) &#123;  <span class="comment">//寻找第一个节点</span></span><br><span class="line">      E item = p.item;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (item != <span class="keyword">null</span> &amp;&amp; p.casItem(item, <span class="keyword">null</span>)) &#123;   <span class="comment">//item不为null的话 cas将其置为null（逻辑删除）</span></span><br><span class="line">        <span class="keyword">if</span> (p != h)     <span class="comment">//p不等于haed时 更新head节点为p的下一个节点</span></span><br><span class="line">          updateHead(h, ((q = p.next) != <span class="keyword">null</span>) ? q : p);    </span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ((q = p.next) == <span class="keyword">null</span>) &#123;   <span class="comment">//队列为空 更新head为</span></span><br><span class="line">        updateHead(h, p);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (p == q)  <span class="comment">//自连接节点 重新开始找</span></span><br><span class="line">        <span class="keyword">continue</span> restartFromHead;</span><br><span class="line">      <span class="keyword">else</span>						<span class="comment">//p已经被逻辑删除 q是要poll的节点</span></span><br><span class="line">        p = q;        </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//将head节点更新为p</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">updateHead</span><span class="params">(Node&lt;E&gt; h, Node&lt;E&gt; p)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (h != p &amp;&amp; casHead(h, p))</span><br><span class="line">    h.lazySetNext(h);   <span class="comment">//旧的head置为自连接节点</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lazySetNext</span><span class="params">(Node&lt;E&gt; val)</span> </span>&#123;</span><br><span class="line">  UNSAFE.putOrderedObject(<span class="keyword">this</span>, nextOffset, val);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">casHead</span><span class="params">(Node&lt;E&gt; cmp, Node&lt;E&gt; val)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> UNSAFE.compareAndSwapObject(<span class="keyword">this</span>, headOffset, cmp, val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="为什么读写性能好"><a href="#为什么读写性能好" class="headerlink" title="为什么读写性能好"></a>为什么读写性能好</h3><p>不是每次入队列都会更新tail节点，也不是每次出队列都会更新head节点，大大减少了CAS volatile写的频率，volatile写的内存语意义就是写完必须刷回内存。</p>
+<p>这也指明了理解这段源码的要点 head节点不一定是第一个节点，而是第一个节点和第二个节点都有可能，tail节点也不一定是最后一个节点，倒数第一倒数第二都有可能。</p>
+<h4 id="casTail和casHead"><a href="#casTail和casHead" class="headerlink" title="casTail和casHead"></a>casTail和casHead</h4><p>调用的<code>unsafe.compareAndSwapObject</code>底层源码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">UNSAFE_ENTRY(jboolean, Unsafe_CompareAndSwapObject(JNIEnv *env, jobject unsafe, jobject obj, jlong offset, jobject e_h, jobject x_h))</span><br><span class="line">  UnsafeWrapper(<span class="string">"Unsafe_CompareAndSwapObject"</span>);</span><br><span class="line">  oop x = JNIHandles::resolve(x_h);   <span class="comment">//更新值</span></span><br><span class="line">  oop e = JNIHandles::resolve(e_h);   <span class="comment">//期待值</span></span><br><span class="line">  oop p = JNIHandles::resolve(obj);   <span class="comment">//被cas的对象</span></span><br><span class="line">  HeapWord* addr = (HeapWord *)index_oop_from_field_offset_long(p, offset); <span class="comment">//拿到对象的内存位置</span></span><br><span class="line">  oop res = oopDesc::atomic_compare_exchange_oop(x, addr, e, <span class="literal">true</span>);		<span class="comment">//cas</span></span><br><span class="line">  jboolean success  = (res == e);</span><br><span class="line">  <span class="keyword">if</span> (success)</span><br><span class="line">    update_barrier_set((<span class="keyword">void</span>*)addr, x);</span><br><span class="line">  <span class="keyword">return</span> success;</span><br><span class="line">UNSAFE_END</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">inline</span> oop <span class="title">oopDesc::atomic_compare_exchange_oop</span><span class="params">(oop exchange_value,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                <span class="keyword">volatile</span> HeapWord *dest,    <span class="comment">//***   </span></span></span></span><br><span class="line"><span class="function"><span class="params">                                                oop compare_value,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                <span class="keyword">bool</span> prebarrier)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (UseCompressedOops) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prebarrier) &#123;</span><br><span class="line">      update_barrier_set_pre((narrowOop*)dest, exchange_value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// encode exchange and compare value from oop to T</span></span><br><span class="line">    narrowOop val = encode_heap_oop(exchange_value);</span><br><span class="line">    narrowOop cmp = encode_heap_oop(compare_value);</span><br><span class="line"></span><br><span class="line">    narrowOop old = (narrowOop) Atomic::cmpxchg(val, (narrowOop*)dest, cmp);</span><br><span class="line">    <span class="comment">// decode old from T to oop</span></span><br><span class="line">    <span class="keyword">return</span> decode_heap_oop(old);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (prebarrier) &#123;</span><br><span class="line">      update_barrier_set_pre((oop*)dest, exchange_value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (oop)Atomic::cmpxchg_ptr(exchange_value, (oop*)dest, compare_value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id><a href="#" class="headerlink" title></a></h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/10/%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E5%85%AC%E5%B9%B3%E9%94%81%E4%B8%8E%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81/" rel="next" title="可重入锁的公平锁与非公平锁">
+                <i class="fa fa-chevron-left"></i> 可重入锁的公平锁与非公平锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老实宇</p>
+              <p class="site-description motion-element" itemprop="description">你在第二层,以为我是第一层,实际上我在第五层</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#高效读写的并发安全的无界单向队列"><span class="nav-number">1.</span> <span class="nav-text">高效读写的并发安全的无界单向队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#继承关系"><span class="nav-number">1.1.</span> <span class="nav-text">继承关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node节点"><span class="nav-number">1.2.</span> <span class="nav-text">Node节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#入队列"><span class="nav-number">1.3.</span> <span class="nav-text">入队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#出队列"><span class="nav-number">1.4.</span> <span class="nav-text">出队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么读写性能好"><span class="nav-number">1.5.</span> <span class="nav-text">为什么读写性能好</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#casTail和casHead"><span class="nav-number">1.5.1.</span> <span class="nav-text">casTail和casHead</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#"><span class="nav-number">1.5.2.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老实宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
