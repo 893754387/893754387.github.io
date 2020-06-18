@@ -353,7 +353,6 @@
 </blockquote>
 <p>刚开始的思路是模拟整个游戏过程，拿到每次要删除的数字的索引，删除掉。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lastRemaining</span><span class="params">(self, n, m)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        假设当前删除的位置是 i ,下一个删除的数字的位置是 i +m 。</span></span><br><span class="line"><span class="string">        但是，由于把当前位置的数字删除了，后面的数字会前移一位，所以实际的下一个位置是 i + m − 1。</span></span><br><span class="line"><span class="string">        因为要模拟环形数组，所以最后取模一下，就是(i+m-1)%n</span></span><br><span class="line"><span class="string">        :type n: int</span></span><br><span class="line"><span class="string">        :type m: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        lst = [i <span class="keyword">for</span> i <span class="keyword">in</span> range(n)]  </span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> n &gt; <span class="number">1</span>:</span><br><span class="line">            i = (i + m - <span class="number">1</span>) % n</span><br><span class="line">            lst.pop(i)</span><br><span class="line">            n -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> lst[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
 <p>但是执行用时2000多ms 很显然 python中数组的删除操作是时间复杂度是O(n)级别的  这个解法时间复杂度是O(n^2)。这题可能也可以实现一个循环链表来做，这样删除操作的时间复杂度就没那么高了，但是我觉得有点费事。</p>
 <p>但是这题每一次删除的数字的索引显然是有规律的，既然有规律，应该是有数学解法的，这就引出了约瑟夫环。</p>
 <p>百度百科的对约瑟夫问题的场景描述如下，代入这个题，就是求谁是最后一个被杀死的。</p>
@@ -362,6 +361,7 @@
 </blockquote>
 <p>假设有8个人 每次杀掉报数为2的   被杀掉的人的索引用黑体标注 下表模拟了整个游戏过程 以便得出规律</p>
 <p>很明显杀掉</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -375,7 +375,8 @@
 <th>7</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>0</td>
 <td>1</td>
 <td><strong>2</strong></td>
@@ -453,9 +454,10 @@
 <td></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p><strong>设f(x,y)的含义为还剩x人的的情况下，幸存者的索引数。</strong></p>
 <p>x为当前轮的人数， 1&lt;=x&lt;=参与的人数</p>
 <p>y是要杀死的报数，  1&lt;=y&lt;=参与的人数</p>
@@ -473,18 +475,14 @@
 <p>显然当n=1时，递推公式显然不成立，因为参与人数的范围要大于1，f(x-1,y)不成立，又易得知，如果只有一人参与，不管报数是多少，只能他是最后的幸存者,也就得到了base case即</p>
 <p>​                                                     f(1,y)=0     x=1</p>
 <p>总的递推公式    </p>
-<p>$$<br>f(x,y) = \begin{cases}<br>0 &amp; x = 1 \<br>(f(x-1,y)+y)mod(x) &amp; 1 &lt; x  &lt;= n(参与人数)<br>\end{cases}<br>$$<br>java版本</p>
+<script type="math/tex; mode=display">
+f(x,y) = \begin{cases}  
+0 & x = 1 \\
+(f(x-1,y)+y)mod(x) & 1 < x  <= n(参与人数)
+\end{cases}</script><p>java版本</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastRemaining</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (lastRemaining(n-<span class="number">1</span>,m)+m)%n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <p>python版本</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">method2</span><span class="params">(self, n, m)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param n: 参与人数</span></span><br><span class="line"><span class="string">        :param m: 报数</span></span><br><span class="line"><span class="string">        :return:  幸存者索引</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">if</span> n==<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> (self.method2(n<span class="number">-1</span>,m)+m)%n</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1>
       
     </div>
@@ -594,7 +592,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

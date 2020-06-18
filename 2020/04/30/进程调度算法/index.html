@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="在操作系统中调度是指一种资源分配，因而调度算法是指：根据系统的资源分配策略所规定的资源分配算法。  $$CPU利用率&#x3D;\frac{CPU忙碌时间}{总时间}$$ $$系统吞吐量&#x3D;\frac{完成作业量}{总时间}$$ $$带权周转时间&#x3D;\frac{作业周转时间}{作业实际运行时间} \作业周转时间&#x3D;作业完成时间-作业提交时间 \平均带权周转时间&#x3D;\frac{各作业带权周转时间}{作业数}$$等待">
+<meta name="description" content="在操作系统中调度是指一种资源分配，因而调度算法是指：根据系统的资源分配策略所规定的资源分配算法。   CPU利用率&#x3D;\frac{CPU忙碌时间}{总时间} 系统吞吐量&#x3D;\frac{完成作业量}{总时间} 带权周转时间&#x3D;\frac{作业周转时间}{作业实际运行时间} \\ 作业周转时间&#x3D;作业完成时间-作业提交时间 \\ 平均带权周转时间&#x3D;\frac{各作业带权周转时间}{作业数}等待时间：进程&#x2F;作">
 <meta property="og:type" content="article">
 <meta property="og:title" content="进程调度算法">
 <meta property="og:url" content="http://yoursite.com/2020/04/30/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="老实宇">
-<meta property="og:description" content="在操作系统中调度是指一种资源分配，因而调度算法是指：根据系统的资源分配策略所规定的资源分配算法。  $$CPU利用率&#x3D;\frac{CPU忙碌时间}{总时间}$$ $$系统吞吐量&#x3D;\frac{完成作业量}{总时间}$$ $$带权周转时间&#x3D;\frac{作业周转时间}{作业实际运行时间} \作业周转时间&#x3D;作业完成时间-作业提交时间 \平均带权周转时间&#x3D;\frac{各作业带权周转时间}{作业数}$$等待">
+<meta property="og:description" content="在操作系统中调度是指一种资源分配，因而调度算法是指：根据系统的资源分配策略所规定的资源分配算法。   CPU利用率&#x3D;\frac{CPU忙碌时间}{总时间} 系统吞吐量&#x3D;\frac{完成作业量}{总时间} 带权周转时间&#x3D;\frac{作业周转时间}{作业实际运行时间} \\ 作业周转时间&#x3D;作业完成时间-作业提交时间 \\ 平均带权周转时间&#x3D;\frac{各作业带权周转时间}{作业数}等待时间：进程&#x2F;作">
 <meta property="article:published_time" content="2020-04-30T15:04:38.000Z">
 <meta property="article:modified_time" content="2020-04-30T15:04:38.000Z">
 <meta property="article:author" content="老实宇">
@@ -343,14 +343,18 @@
         <blockquote>
 <p>在<a href="https://baike.baidu.com/item/操作系统" target="_blank" rel="noopener">操作系统</a>中调度是指一种资源分配，因而调度算法是指：根据系统的资源分配策略所规定的资源分配算法。</p>
 </blockquote>
-<p>$$<br>CPU利用率=\frac{CPU忙碌时间}{总时间}<br>$$</p>
-<p>$$<br>系统吞吐量=\frac{完成作业量}{总时间}<br>$$</p>
-<p>$$<br>带权周转时间=\frac{作业周转时间}{作业实际运行时间} \<br>作业周转时间=作业完成时间-作业提交时间 \<br>平均带权周转时间=\frac{各作业带权周转时间}{作业数}<br>$$<br>等待时间：进程/作业处于等待处理机状态时间之和。</p>
+<script type="math/tex; mode=display">
+CPU利用率=\frac{CPU忙碌时间}{总时间}</script><script type="math/tex; mode=display">
+系统吞吐量=\frac{完成作业量}{总时间}</script><script type="math/tex; mode=display">
+带权周转时间=\frac{作业周转时间}{作业实际运行时间} \\
+作业周转时间=作业完成时间-作业提交时间 \\
+平均带权周转时间=\frac{各作业带权周转时间}{作业数}</script><p>等待时间：进程/作业处于等待处理机状态时间之和。</p>
 <p>响应时间：用户提交请求到首次产生响应所用的时间。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">算法</th>
+<th style="text-align:left">算法</th>
 <th>规则</th>
 <th>是否抢占</th>
 <th>优点</th>
@@ -358,8 +362,9 @@
 <th>饥饿现象</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">先到先服务（FCFS）</td>
+<tbody>
+<tr>
+<td style="text-align:left">先到先服务（FCFS）</td>
 <td>按照作业到达的达到的先后顺序进行服务</td>
 <td>否</td>
 <td>公平，算法实现简单。</td>
@@ -367,7 +372,7 @@
 <td>否</td>
 </tr>
 <tr>
-<td align="left">短作业优先（SJF）</td>
+<td style="text-align:left">短作业优先（SJF）</td>
 <td>最短的作业/进程优先得到服务。</td>
 <td>否(也有抢占式的版本最短剩余时间优先(SRTN))</td>
 <td>最短的带权周转时间和最短的平均等待时间</td>
@@ -375,7 +380,7 @@
 <td>是</td>
 </tr>
 <tr>
-<td align="left">高响应比优先（HRRN）</td>
+<td style="text-align:left">高响应比优先（HRRN）</td>
 <td>响应比<sup>1</sup>最高的作业/进程优先得到服务</td>
 <td>否</td>
 <td>综合考虑了等待时间和运行时间。<br>等待时间相同时，短作业优先。服务时间相同时，等待时间久的作业优先。</td>
@@ -383,7 +388,7 @@
 <td>否</td>
 </tr>
 <tr>
-<td align="left">时间片轮转（RR）</td>
+<td style="text-align:left">时间片轮转（RR）</td>
 <td>按照各进程达到就绪队列的顺序，轮流让各个进程执行一个时间片（如100ms）。<br>若在一个时间片内未完成，剥夺处理机，将进程重新放入就绪队列队尾。</td>
 <td>是，通过时钟中断来通知CPU时间片已到。</td>
 <td>公平，响应快，适用于分时操作系统<sup>2</sup></td>
@@ -391,7 +396,7 @@
 <td>否</td>
 </tr>
 <tr>
-<td align="left">优先级调度算法<sup>3</sup></td>
+<td style="text-align:left">优先级调度算法<sup>3</sup></td>
 <td>调度优先级最高的作业/进程。<br>分为动态优先级，静态优先级<sup>4</sup>。</td>
 <td>都有</td>
 <td>用优先级区分任务的紧急程度，适用于实时操作系统<sup>5</sup>。</td>
@@ -399,14 +404,16 @@
 <td>是</td>
 </tr>
 <tr>
-<td align="left">多级反馈队列调度算法</td>
+<td style="text-align:left">多级反馈队列调度算法</td>
 <td>设置多级就绪队列，各级队列优先级从高到底，时间片由小到大。<br>新进程达到进入第一级队列，按FCFS分配时间片，若时间片用完仍未结束，进程进入下一级队列队尾（若已经是最后一级，重新放入此队列队尾）。<br>只有第k级队列为空，才会为k+1级队列分配时间片</td>
 <td>是</td>
 <td>相对公平(FCFS)。<br>新到达的进程很快得到响应（RR）。<br>短进程只用较少的时间就可完成(SPF)<br>不估计进程运行时间，避免用户作假<br></td>
 <td>/</td>
 <td>是</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <ol>
 <li><p>响应比=（等待时间+要求服务时间）/要求服务时间</p>
 </li>
@@ -533,7 +540,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

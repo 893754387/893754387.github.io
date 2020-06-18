@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。  TCP协议 TCP通过下列方式来提供可靠性：  1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。 2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认">
+<meta name="description" content="TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。  TCP协议) TCP通过下列方式来提供可靠性：  1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。 2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TCP协议">
 <meta property="og:url" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="老实宇">
-<meta property="og:description" content="TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。  TCP协议 TCP通过下列方式来提供可靠性：  1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。 2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认">
+<meta property="og:description" content="TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。  TCP协议) TCP通过下列方式来提供可靠性：  1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。 2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确">
 <meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/1.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/2.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/3.png">
@@ -350,7 +350,7 @@
       
         <p>TCP协议是工作在传输层上的是一种面向连接的、可靠的、基于字节流的传输层通信协议。</p>
 <blockquote>
-<p><a href="[https://baike.baidu.com/item/TCP/33012?fromtitle=TCP%E5%8D%8F%E8%AE%AE&fromid=8988699&fr=aladdin](https://baike.baidu.com/item/TCP/33012?fromtitle=TCP协议&fromid=8988699&fr=aladdin)">TCP协议</a></p>
+<p><a href="[https://baike.baidu.com/item/TCP/33012?fromtitle=TCP%E5%8D%8F%E8%AE%AE&amp;fromid=8988699&amp;fr=aladdin](https://baike.baidu.com/item/TCP/33012?fromtitle=TCP协议&amp;fromid=8988699&amp;fr=aladdin">TCP协议</a>)</p>
 <p>TCP通过下列方式来提供可靠性： </p>
 <p>1．应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据长度将保持不变。由TCP传递给IP的信息单位称为报文段或段（segment）。</p>
 <p>2．当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认，将重发这个报文段。当TCP收到发自TCP连接另一端的数据，它将发送一个确认。TCP有延迟确认的功能，在此功能没有打开，则是立即确认。功能打开，则由定时器触发确认时间点。</p>
@@ -385,6 +385,7 @@
 <p>客户端为该TCP连接<strong>分配缓存和变量</strong>，并向服务端返回<strong>确认的确认</strong>。可以携带数据。</p>
 <p>​    <code>SYN=0 ACK=1 seq=x+1 ack=y+1</code> </p>
 <p><strong>为什么需要三次握手？</strong></p>
+<p>&gt;<br>&gt;</p>
 <blockquote>
 <p>TCP 需要 seq 序列号来做可靠重传或接收，而避免连接复用时无法分辨出 seq 是延迟或者是旧链接的 seq，因此需要三次握手来约定确定双方的 ISN（初始 seq 序列号）。</p>
 <p>TCP 协议是不限制一个特定的连接（两端 socket 一样）被重复使用的。</p>
@@ -421,7 +422,7 @@
 <p>客户端发送<strong>连接释放报文段</strong>，停止发送数据，主动关闭TCP连接。</p>
 <p><code>FIN=1 seq=u</code></p>
 <p><strong>ROUND 2</strong></p>
-<p>服务端回送一个<strong>确认报文段</strong>，客户到服务器这个方向的连接就释放了—–半关闭状态。</p>
+<p>服务端回送一个<strong>确认报文段</strong>，客户到服务器这个方向的连接就释放了——-半关闭状态。</p>
 <p><code>ACK=1 seq=v ack=u+1</code></p>
 <p><strong>ROUND 3</strong><br>服务端发完数据，发出<strong>连接释放报文段</strong>，主动关闭TCP连接。</p>
 <p><code>FIN=1 ACK=1 seq=w ack=u+1</code></p>
@@ -463,7 +464,6 @@
 <h5 id="快重传-快恢复"><a href="#快重传-快恢复" class="headerlink" title="快重传+快恢复"></a><strong>快重传+快恢复</strong></h5><p><img src="/2020/06/01/TCP%E5%8D%8F%E8%AE%AE/7.png" alt="5839169975F8458CF87013331A43248A"></p>
 <p>（1）当发送方连续收到三个重复确认，就执行“乘法减小”算法，把慢开始门限ssthresh减半。这是为了预防网络发生拥塞。请注意：接下去不执行慢开始算法。<br>（2）由于发送方现在认为网络很可能没有发生拥塞，因此与慢开始不同之处是现在不执行慢开始算法（即拥塞窗口cwnd现在不设置为1），而是把cwnd值设置为慢开始门限ssthresh减半后的数值，然后开始执行拥塞避免算法（“加法增大”），使拥塞窗口缓慢地线性增大。</p>
 <h4 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">发送方窗口的上限值 &#x3D; Min [ rwnd, cwnd ]</span><br></pre></td></tr></table></figure>
-
 <p>当rwnd &lt; cwnd 时，是接收方的接收能力限制发送方窗口的最大值。<br>当cwnd &lt; rwnd 时，则是网络的拥塞限制发送方窗口的最大</p>
 
       
@@ -578,7 +578,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

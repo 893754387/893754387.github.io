@@ -353,16 +353,12 @@
 <p>你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？</p>
 <p><strong>示例 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: [2,2,1]</span><br><span class="line">&gt;输出: 1</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: [4,1,2,1,2]</span><br><span class="line">&gt;输出: 4</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>这个题是位运算入门题。题目要求不使用额外空间，想用哈希表映射元素和出现次数的做法肯定是不符合题意的了。</p>
 <p>其实这题只要把每个元素做异或就可以了，相同的数字异或的结果是0，0和出现一次的数字异或的结果是出现一次的数字本身。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num :</span><br><span class="line">                nums) &#123;</span><br><span class="line">            res^=num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <blockquote>
 <h4 id="137-只出现一次的数字-II"><a href="#137-只出现一次的数字-II" class="headerlink" title="137. 只出现一次的数字 II"></a><a href="https://leetcode-cn.com/problems/single-number-ii/" target="_blank" rel="noopener">137. 只出现一次的数字 II</a></h4><p>难度中等306</p>
 <p>给定一个<strong>非空</strong>整数数组，除了某个元素只出现一次以外，其余每个元素均出现了三次。找出那个只出现了一次的元素。</p>
@@ -370,7 +366,6 @@
 <p>你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？</p>
 <p><strong>示例 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: [2,2,3,2]</span><br><span class="line">&gt;输出: 3</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: [0,1,0,1,0,1,99]</span><br><span class="line">&gt;输出: 99</span><br></pre></td></tr></table></figure>
 </blockquote>
@@ -379,15 +374,11 @@
 <p>那么这题就相当于自己统计每一位1出现的次数，当这个位有三个1时等于0</p>
 <p>相当于定义运算规则  1❄1❄1=0，1❄0=1</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//i代表第几位</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">//考虑每一个数</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; nums.length; j++) &#123;</span><br><span class="line">                <span class="comment">//当前位是否是 1  1是000...0001  nums[j]右移i位 此时&amp;判断这个位 是不是等于1</span></span><br><span class="line">                <span class="keyword">if</span> ((nums[j] &gt;&gt;&gt; i &amp; <span class="number">1</span>) == <span class="number">1</span>) &#123;</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//1 的个数是否是 3 的倍数</span></span><br><span class="line">            <span class="keyword">if</span> (count % <span class="number">3</span> != <span class="number">0</span>) &#123;</span><br><span class="line">                ans = ans | <span class="number">1</span> &lt;&lt; i;  <span class="comment">//1右移i位变为 100..0000 |运算使ans这个位不是1变为1</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <blockquote>
 <h4 id="面试题56-I-数组中数字出现的次数"><a href="#面试题56-I-数组中数字出现的次数" class="headerlink" title="面试题56 - I. 数组中数字出现的次数"></a><a href="https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/" target="_blank" rel="noopener">面试题56 - I. 数组中数字出现的次数</a></h4><p>难度中等129</p>
 <p>一个整型数组 <code>nums</code> 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。</p>
 <p><strong>示例 1：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入：nums &#x3D; [4,1,4,6]</span><br><span class="line">&gt;输出：[1,6] 或 [6,1]</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 2：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入：nums &#x3D; [1,2,10,4,1,4,3,3]</span><br><span class="line">&gt;输出：[2,10] 或 [10,2]</span><br></pre></td></tr></table></figure>
 </blockquote>
@@ -396,11 +387,6 @@
 <p>作为目标的两个数的这一位必定不同，那么这两个数必当分别在两个数组。</p>
 <p>每组进行异或，最后就是要求的两个数。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] singleNumbers(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num :</span><br><span class="line">                nums) &#123;</span><br><span class="line">            sum ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((sum &amp; <span class="number">1</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            index++;</span><br><span class="line">            sum &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> num1 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> num2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num :</span><br><span class="line">                nums) &#123;</span><br><span class="line">            <span class="keyword">if</span> (((num &gt;&gt; index) &amp; <span class="number">1</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">                num1 ^= num;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                num2 ^= num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;num1, num2&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 
       
     </div>
@@ -514,7 +500,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

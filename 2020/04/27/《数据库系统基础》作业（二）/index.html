@@ -342,19 +342,24 @@
       
         <h5 id="3-1-举例说明具有不同基数约束的二元联系的含义"><a href="#3-1-举例说明具有不同基数约束的二元联系的含义" class="headerlink" title="3.1 举例说明具有不同基数约束的二元联系的含义"></a>3.1 举例说明具有不同基数约束的二元联系的含义</h5><h5 id="3-2-分别举出一个一元联系和复杂联系的实例，说明各种约束情况"><a href="#3-2-分别举出一个一元联系和复杂联系的实例，说明各种约束情况" class="headerlink" title="3.2 分别举出一个一元联系和复杂联系的实例，说明各种约束情况"></a>3.2 分别举出一个一元联系和复杂联系的实例，说明各种约束情况</h5><p>以大学为例。假设-一个班级只能有一个班主任, 同时一个班主任只能管理一个班级,那么班级与班主任之间的联系就是一对一联系。班级与学生之间的联系则是一对多联系,一个班级一般有不止一名学生, 但一个学生只能属于一个班级。学生与导师之间的联系是多对-联系,一个学生只能有一名导师,但一个导师可能同时指导多个学生。学生与课程之间的联系是多对多联系,-名学生可以选多门课程, 同样一门课程也同时被多个学生选择。</p>
 <h5 id="3-3-举例说明复合属性、多值属性和派生属性的含义。"><a href="#3-3-举例说明复合属性、多值属性和派生属性的含义。" class="headerlink" title="3.3 举例说明复合属性、多值属性和派生属性的含义。"></a>3.3 举例说明复合属性、多值属性和派生属性的含义。</h5><p>仍以大学为例。一个学生所属院系可能是复合属性,如学生张三的院系属性的值可能是“数学院数学系基础数学专业”，可以拆分为学院(数学院)系(数学系)专业(基础数学)三个子属性。学生参与课题可能是多值属性，因为学生可能参与不止一个课题。学生的平均成绩是派生属性，可以通过学生选修课程的成绩、课程数计算得到。</p>
-<h5 id><a href="#" class="headerlink" title></a></h5><h5 id="7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法"><a href="#7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法" class="headerlink" title="7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法"></a>7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法</h5><table>
+<h5 id><a href="#" class="headerlink" title=" "></a> </h5><h5 id="7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法"><a href="#7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法" class="headerlink" title="7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法"></a>7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法</h5><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>姓名</th>
 <th>学院和专业</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>张三</td>
 <td>机械学院机械专业</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>字段“学院和专业”不符合原子性，应拆分</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -363,13 +368,17 @@
 <th>专业</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>张三</td>
 <td>机械学院</td>
 <td>机械专业</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h5 id="7-2-试举一个关系模式和其关系的例子-解释存在的更新异常问题-以及引起这些问题的原因。"><a href="#7-2-试举一个关系模式和其关系的例子-解释存在的更新异常问题-以及引起这些问题的原因。" class="headerlink" title="7.2 试举一个关系模式和其关系的例子,解释存在的更新异常问题,以及引起这些问题的原因。"></a>7.2 试举一个关系模式和其关系的例子,解释存在的更新异常问题,以及引起这些问题的原因。</h5><p>考虑一个大学中的Teacher关系。假设大学为-间办公室仅配备-部电话，即电话是按照办公室而非人头数量配置的。关系模式和关系如下表:</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -380,7 +389,8 @@
 <th>电话</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1001</td>
 <td>李老师</td>
 <td>讲师</td>
@@ -401,13 +411,16 @@
 <td>B103</td>
 <td>1234-2331</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>其中编号(tID)为主键。</p>
-<p>更新时可能存在插入异常、删除异常、修改异常等问题，举例如下 ;<br>●    插入异常:设学校新增加一间办公室 B104，暂时没有老师使用。由于Teacher关系的主键是tID ,如果没有老师使用该办公室,则无法将B104插入该关系中。<br>●    删除异常:删除1003 对应的元组后, B103的信息也随之消失。<br>●    修改异常:设B102的电话发生更改,如果在修改时发生错误,可能会存在1001 1002对应的B102的电话不–致。</p>
+<p>更新时可能存在插入异常、删除异常、修改异常等问题，举例如下 ;<br>●    插入异常:设学校新增加一间办公室 B104，暂时没有老师使用。由于Teacher关系的主键是tID ,如果没有老师使用该办公室,则无法将B104插入该关系中。<br>●    删除异常:删除1003 对应的元组后, B103的信息也随之消失。<br>●    修改异常:设B102的电话发生更改,如果在修改时发生错误,可能会存在1001 1002对应的B102的电话不—致。</p>
 <p>主要的问题是存在非主属性对候选键的传递依赖, tID=&gt;officeNo, officeNo=&gt;tel。即不符合3NF。将Teacher关系做如下的拆分:<br>Teacher (tID, Name, title, officeNo)  </p>
 <p>Office (officeNo, tel)</p>
 <h5 id="7-3-举出符合下列条件的关系模型的实例"><a href="#7-3-举出符合下列条件的关系模型的实例" class="headerlink" title="7.3 举出符合下列条件的关系模型的实例"></a>7.3 举出符合下列条件的关系模型的实例</h5><p>(1) 属于1NF但不属于2NF:</p>
 <p>见下表描述的计算机竞赛关系：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -416,7 +429,8 @@
 <th>grade</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1001</td>
 <td>10001</td>
 <td>二等奖</td>
@@ -431,9 +445,12 @@
 <td>10003</td>
 <td>一等奖</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>候选键为(tID,sID)，grade是非主属性，部分依赖于sID，不符合2NF</p>
 <p>(2)属于2NF但不属于3NF:</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -444,7 +461,8 @@
 <th>电话</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1001</td>
 <td>李老师</td>
 <td>讲师</td>
@@ -465,7 +483,9 @@
 <td>B103</td>
 <td>1234-2331</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>tID=&gt;officeNo=&gt;tel 存在传递依赖</p>
 <p>(3)属于3NF但不属于BCNF :</p>
 <p>考虑一个图书馆科技查新关系</p>
@@ -478,8 +498,7 @@
 <p>（2）找出R的所有候选键:</p>
 <p>​            {A,C}和{C,E}</p>
 <p>（3）求出R的最小覆盖<br>            针对G1 , E→A, A→D，根据传递律，E→D。再由增广律，CE→D冗余。故而最小覆盖是G= {A→B,A→D,A→E,E→A}</p>
-<p>#####　7.5　请判断以下各关系模式在函数依赖的范围内分别最高属于几范式,为什么?假设每个表至少符合1NF。</p>
-<p>(3) R(ABC),F={AC→B,B→C}<br>            3NF。候选键是( A.B )和(A,C )因而所有属性都是主属性，至少满足3NF。但由于B→C且B不是超键，故而不满足BCNF。<br>(4) R(ABCD),F ={A→C,C→A,C→D,A→B}<br>            BCNF。候选键是A和C ,不存在传递依赖,并且所有的依赖都是超键。</p>
+<h5 id="7-5-请判断以下各关系模式在函数依赖的范围内分别最高属于几范式-为什么-假设每个表至少符合1NF。"><a href="#7-5-请判断以下各关系模式在函数依赖的范围内分别最高属于几范式-为什么-假设每个表至少符合1NF。" class="headerlink" title="　7.5　请判断以下各关系模式在函数依赖的范围内分别最高属于几范式,为什么?假设每个表至少符合1NF。"></a>　7.5　请判断以下各关系模式在函数依赖的范围内分别最高属于几范式,为什么?假设每个表至少符合1NF。</h5><p>(3) R(ABC),F={AC→B,B→C}<br>            3NF。候选键是( A.B )和(A,C )因而所有属性都是主属性，至少满足3NF。但由于B→C且B不是超键，故而不满足BCNF。<br>(4) R(ABCD),F ={A→C,C→A,C→D,A→B}<br>            BCNF。候选键是A和C ,不存在传递依赖,并且所有的依赖都是超键。</p>
 <h5 id="7-6-请为下列的函数依赖集求最小覆盖"><a href="#7-6-请为下列的函数依赖集求最小覆盖" class="headerlink" title="7.6 请为下列的函数依赖集求最小覆盖"></a>7.6 请为下列的函数依赖集求最小覆盖</h5><p>(1) F={A→C,C→A,B→AC,D→AC}<br>        按分解律将右部分分解为单个属性</p>
 <p>​                G1={A→C,C→A,B→A,B→C,D→A,D→C}</p>
 <p>​        由B→A、A→C得到B→C冗余, D→A、A→C得到D→C冗余,将两个依赖关系删去后得到的最小覆盖为<br>​                G={A→C,C→A,B→A,D→A}</p>
@@ -491,6 +510,7 @@
 <p>(2)</p>
 <p>假如每个教师的学位属性中存放其获得的每个学位,并且有多间办公室, 请为教师这个关系模式确定函数依赖集,该关系模式最高属于几范式?请依次将其.<br>规范化为符合1NF、2NF、 3NF、 BCNF、4NF的关系模式。<br>        F ={tID→name,tID→sex,tID→title,tID →→roomNo,tID→+ degree}<br>该关系最高可以满足1NF.这是因为该关系的候选键为(tID, degree, roomNo)，<br>但非主属性name. sex. title 都依赖于tID ,不符合2NF的定义。<br>规范化为2NF :<br>teacher(tID, name, sex, title)<br>teacherdetail(tID, degree, roomNo)<br>这样，在teacher 关系中,所有非主属性都完全依赖于主属性tID ,符合2NF的要求。同时发现，在teacher中不存在传递依赖, teacherdetail中不存在非主属性，因而以上两个关系都符合3NF。为了规范化为BCNF,仅需考察teacherdetail关系。这是因为在teacher关系中，主属性只是tID，故而每一个非平凡的函数依赖的决定因素-定都是超键。在后一个关系中，所有属性都是主属性,但由于其任意一个属性均不能决定其余两个，任意两个属性构成的属性组也不能决定第三个属性，故而该关系也属于BCNF。</p>
 <h5 id="8-1试举一个实例说明-分解若不满足无损分解特性和保持依赖特性所带来的问题。"><a href="#8-1试举一个实例说明-分解若不满足无损分解特性和保持依赖特性所带来的问题。" class="headerlink" title="8.1试举一个实例说明,分解若不满足无损分解特性和保持依赖特性所带来的问题。"></a>8.1试举一个实例说明,分解若不满足无损分解特性和保持依赖特性所带来的问题。</h5><p>利用习题7.1中举的例子，并扩充- -些元组如下:</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -503,7 +523,8 @@
 <th>专业</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>10001</td>
 <td>张平</td>
 <td>男</td>
@@ -548,7 +569,9 @@
 <td>物理系</td>
 <td>天文物理专业</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>如果分解时,采用了如下的分解方法<br>Student (sID, name, sex, year)<br>School (school, depart, major)</p>
 <p>这一分解不是无损的， 再连接时破坏了每个学生只能属于一个学院的语义。实际上是丢失了如下的函数依赖: sID-school、slD→depart、 sID-major</p>
 <h5 id="8-3-将习题5-5中所建的各个ER模型转换为关系模型-并且为每个关系模型找出候选键，指定主键-根据语义给出存在的面数依赖-并判断所属的范式-若不属于3NF-规范化为3NF。"><a href="#8-3-将习题5-5中所建的各个ER模型转换为关系模型-并且为每个关系模型找出候选键，指定主键-根据语义给出存在的面数依赖-并判断所属的范式-若不属于3NF-规范化为3NF。" class="headerlink" title="8.3 将习题5.5中所建的各个ER模型转换为关系模型,并且为每个关系模型找出候选键，指定主键,根据语义给出存在的面数依赖,并判断所属的范式,若不属于3NF .规范化为3NF。"></a>8.3 将习题5.5中所建的各个ER模型转换为关系模型,并且为每个关系模型找出候选键，指定主键,根据语义给出存在的面数依赖,并判断所属的范式,若不属于3NF .规范化为3NF。</h5><p>(1)<br>School (Schno, SchName, Schheadcount, Schdate)</p>
@@ -684,7 +707,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -730,7 +753,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-举例说明具有不同基数约束的二元联系的含义"><span class="nav-number">1.</span> <span class="nav-text">3.1 举例说明具有不同基数约束的二元联系的含义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-分别举出一个一元联系和复杂联系的实例，说明各种约束情况"><span class="nav-number">2.</span> <span class="nav-text">3.2 分别举出一个一元联系和复杂联系的实例，说明各种约束情况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-举例说明复合属性、多值属性和派生属性的含义。"><span class="nav-number">3.</span> <span class="nav-text">3.3 举例说明复合属性、多值属性和派生属性的含义。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#"><span class="nav-number">4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法"><span class="nav-number">5.</span> <span class="nav-text">7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-试举一个关系模式和其关系的例子-解释存在的更新异常问题-以及引起这些问题的原因。"><span class="nav-number">6.</span> <span class="nav-text">7.2 试举一个关系模式和其关系的例子,解释存在的更新异常问题,以及引起这些问题的原因。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-3-举出符合下列条件的关系模型的实例"><span class="nav-number">7.</span> <span class="nav-text">7.3 举出符合下列条件的关系模型的实例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-4-一个有5个属性的关系模式R-ABCDE-函数依赖集为F-A→BDE-CE→D-E→A-。"><span class="nav-number">8.</span> <span class="nav-text">7.4 　一个有5个属性的关系模式R(ABCDE) ,函数依赖集为F&#x3D; {A→BDE,CE→D,E→A}。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-6-请为下列的函数依赖集求最小覆盖"><span class="nav-number">9.</span> <span class="nav-text">7.6 请为下列的函数依赖集求最小覆盖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-7-教务管理数据库关于教师的属性问题。"><span class="nav-number">10.</span> <span class="nav-text">7.7 教务管理数据库关于教师的属性问题。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-1试举一个实例说明-分解若不满足无损分解特性和保持依赖特性所带来的问题。"><span class="nav-number">11.</span> <span class="nav-text">8.1试举一个实例说明,分解若不满足无损分解特性和保持依赖特性所带来的问题。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-3-将习题5-5中所建的各个ER模型转换为关系模型-并且为每个关系模型找出候选键，指定主键-根据语义给出存在的面数依赖-并判断所属的范式-若不属于3NF-规范化为3NF。"><span class="nav-number">12.</span> <span class="nav-text">8.3 将习题5.5中所建的各个ER模型转换为关系模型,并且为每个关系模型找出候选键，指定主键,根据语义给出存在的面数依赖,并判断所属的范式,若不属于3NF .规范化为3NF。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-7将下列关系模式分解为属于3NF和BCNF的关系模式"><span class="nav-number">13.</span> <span class="nav-text">8.7将下列关系模式分解为属于3NF和BCNF的关系模式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-举例说明具有不同基数约束的二元联系的含义"><span class="nav-number">1.</span> <span class="nav-text">3.1 举例说明具有不同基数约束的二元联系的含义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-分别举出一个一元联系和复杂联系的实例，说明各种约束情况"><span class="nav-number">2.</span> <span class="nav-text">3.2 分别举出一个一元联系和复杂联系的实例，说明各种约束情况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-举例说明复合属性、多值属性和派生属性的含义。"><span class="nav-number">3.</span> <span class="nav-text">3.3 举例说明复合属性、多值属性和派生属性的含义。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#"><span class="nav-number">4.</span> <span class="nav-text"> </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-试举一个不符合1NF的实际的例子，说明原因和解决方法"><span class="nav-number">5.</span> <span class="nav-text">7.1 试举一个不符合1NF的实际的例子，说明原因和解决方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-试举一个关系模式和其关系的例子-解释存在的更新异常问题-以及引起这些问题的原因。"><span class="nav-number">6.</span> <span class="nav-text">7.2 试举一个关系模式和其关系的例子,解释存在的更新异常问题,以及引起这些问题的原因。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-3-举出符合下列条件的关系模型的实例"><span class="nav-number">7.</span> <span class="nav-text">7.3 举出符合下列条件的关系模型的实例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-4-一个有5个属性的关系模式R-ABCDE-函数依赖集为F-A→BDE-CE→D-E→A-。"><span class="nav-number">8.</span> <span class="nav-text">7.4 　一个有5个属性的关系模式R(ABCDE) ,函数依赖集为F&#x3D; {A→BDE,CE→D,E→A}。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-5-请判断以下各关系模式在函数依赖的范围内分别最高属于几范式-为什么-假设每个表至少符合1NF。"><span class="nav-number">9.</span> <span class="nav-text">　7.5　请判断以下各关系模式在函数依赖的范围内分别最高属于几范式,为什么?假设每个表至少符合1NF。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-6-请为下列的函数依赖集求最小覆盖"><span class="nav-number">10.</span> <span class="nav-text">7.6 请为下列的函数依赖集求最小覆盖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-7-教务管理数据库关于教师的属性问题。"><span class="nav-number">11.</span> <span class="nav-text">7.7 教务管理数据库关于教师的属性问题。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-1试举一个实例说明-分解若不满足无损分解特性和保持依赖特性所带来的问题。"><span class="nav-number">12.</span> <span class="nav-text">8.1试举一个实例说明,分解若不满足无损分解特性和保持依赖特性所带来的问题。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-3-将习题5-5中所建的各个ER模型转换为关系模型-并且为每个关系模型找出候选键，指定主键-根据语义给出存在的面数依赖-并判断所属的范式-若不属于3NF-规范化为3NF。"><span class="nav-number">13.</span> <span class="nav-text">8.3 将习题5.5中所建的各个ER模型转换为关系模型,并且为每个关系模型找出候选键，指定主键,根据语义给出存在的面数依赖,并判断所属的范式,若不属于3NF .规范化为3NF。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-7将下列关系模式分解为属于3NF和BCNF的关系模式"><span class="nav-number">14.</span> <span class="nav-text">8.7将下列关系模式分解为属于3NF和BCNF的关系模式</span></a></li></ol></div>
             
 
           </div>

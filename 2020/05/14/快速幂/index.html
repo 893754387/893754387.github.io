@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="顾名思义，快速幂就是快速算底数的n次幂。其时间复杂度为 O(log₂N)， 与朴素的O(N)相比效率有了极大的提高。  O(N)方法直接挨个乘就可以。防止溢出 对m取模，即求  (x^n)%m 引入定理$$(ab) % m &#x3D; ((a%m)(b%m))%m$$证明如下 1234a%m &#x3D; (i*m+c)%m &#x3D; cb%m &#x3D; (j*m+d)%m &#x3D; d(a*b)%m &#x3D; (((i+j)m^2+(">
+<meta name="description" content="顾名思义，快速幂就是快速算底数的n次幂。其时间复杂度为 O(log₂N)， 与朴素的O(N)相比效率有了极大的提高。  O(N)方法直接挨个乘就可以。防止溢出 对m取模，即求  (x^n)%m 引入定理  (a*b) \% m &#x3D; ((a\%m)*(b\%m))\%m证明如下 1234a%m &#x3D; (i*m+c)%m &#x3D; cb%m &#x3D; (j*m+d)%m &#x3D; d(a*b)%m &#x3D; (((i+j)m">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速幂">
 <meta property="og:url" content="http://yoursite.com/2020/05/14/%E5%BF%AB%E9%80%9F%E5%B9%82/index.html">
 <meta property="og:site_name" content="老实宇">
-<meta property="og:description" content="顾名思义，快速幂就是快速算底数的n次幂。其时间复杂度为 O(log₂N)， 与朴素的O(N)相比效率有了极大的提高。  O(N)方法直接挨个乘就可以。防止溢出 对m取模，即求  (x^n)%m 引入定理$$(ab) % m &#x3D; ((a%m)(b%m))%m$$证明如下 1234a%m &#x3D; (i*m+c)%m &#x3D; cb%m &#x3D; (j*m+d)%m &#x3D; d(a*b)%m &#x3D; (((i+j)m^2+(">
+<meta property="og:description" content="顾名思义，快速幂就是快速算底数的n次幂。其时间复杂度为 O(log₂N)， 与朴素的O(N)相比效率有了极大的提高。  O(N)方法直接挨个乘就可以。防止溢出 对m取模，即求  (x^n)%m 引入定理  (a*b) \% m &#x3D; ((a\%m)*(b\%m))\%m证明如下 1234a%m &#x3D; (i*m+c)%m &#x3D; cb%m &#x3D; (j*m+d)%m &#x3D; d(a*b)%m &#x3D; (((i+j)m">
 <meta property="article:published_time" content="2020-05-14T12:09:22.000Z">
 <meta property="article:modified_time" content="2020-05-14T12:09:22.000Z">
 <meta property="article:author" content="老实宇">
@@ -344,36 +344,42 @@
 <p><strong>顾名思义</strong>，快速幂就是快速算底数的n次幂。其时间复杂度为 O(log₂N)， 与朴素的O(N)相比效率有了极大的提高。</p>
 </blockquote>
 <h4 id="O-N-方法"><a href="#O-N-方法" class="headerlink" title="O(N)方法"></a>O(N)方法</h4><p>直接挨个乘就可以。防止溢出 对m取模，即求  (x^n)%m</p>
-<p>引入定理<br>$$<br>(a<em>b) % m = ((a%m)</em>(b%m))%m<br>$$<br>证明如下</p>
+<p>引入定理</p>
+<script type="math/tex; mode=display">
+(a*b) \% m = ((a\%m)*(b\%m))\%m</script><p>证明如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a%m = (i*m+c)%m = c</span><br><span class="line">b%m = (j*m+d)%m = d</span><br><span class="line"></span><br><span class="line">(a*b)%m = (((i+j)m^<span class="number">2</span>+((d*i)+(c*j))m+cd)%m = cd%m = ((a%m)*(b%m))%m</span><br></pre></td></tr></table></figure>
-
 <p>反应在代码上就是步步取模</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">int</span> M = <span class="number">1000</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">myPow</span><span class="params">(<span class="keyword">double</span> x,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">          <span class="keyword">double</span> res = <span class="number">1.0</span>;</span><br><span class="line">      	x %= M</span><br><span class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">              res *= x;</span><br><span class="line">              res %= M</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> res;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="快速幂"><a href="#快速幂" class="headerlink" title="快速幂"></a>快速幂</h4><p>举个例子<br>$$<br>5^{11}=5^{1011(bin)}\<br>5^{1011(bin)}=5^{2^0<em>1+2^1</em>1+2^2<em>0+2^3</em>1}<br>=5^{2^0<em>1}</em>5^{2^1<em>1}</em>5^{2^2<em>0}</em>5^{2^3<em>1}<br>$$<br>以上对指数进行了二进制的拆分，如果不考虑指数上的乘1和乘0，那么最后一个式子的每个因子都是前一个因子的平方。<br>$$<br>\frac{5^{2^k}}{5^{2^{k-1}}}=\frac{5^{2^{k-1}</em>2}}{5^{2^{k-1}}}=\frac{(5^{2^{k-1}})^2}{5^{2^{k-1}}}<br>$$<br>那么只要每次都把因子平方，只要指数的二进制当前位是1就乘到结果上(是0的话相当于乘1，所以忽略)，其实这就已经实现了快速幂。</p>
+<h4 id="快速幂"><a href="#快速幂" class="headerlink" title="快速幂"></a>快速幂</h4><p>举个例子</p>
+<script type="math/tex; mode=display">
+5^{11}=5^{1011(bin)}\\
+5^{1011(bin)}=5^{2^0*1+2^1*1+2^2*0+2^3*1}
+=5^{2^0*1}*5^{2^1*1}*5^{2^2*0}*5^{2^3*1}</script><p>以上对指数进行了二进制的拆分，如果不考虑指数上的乘1和乘0，那么最后一个式子的每个因子都是前一个因子的平方。</p>
+<script type="math/tex; mode=display">
+\frac{5^{2^k}}{5^{2^{k-1}}}=\frac{5^{2^{k-1}*2}}{5^{2^{k-1}}}=\frac{(5^{2^{k-1}})^2}{5^{2^{k-1}}}</script><p>那么只要每次都把因子平方，只要指数的二进制当前位是1就乘到结果上(是0的话相当于乘1，所以忽略)，其实这就已经实现了快速幂。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">int</span> M = <span class="number">1000</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">myPow</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">double</span> res = <span class="number">1.0</span>;</span><br><span class="line">       x %= M</span><br><span class="line">       <span class="keyword">while</span> (n != <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> ((n &amp; <span class="number">1</span>) == <span class="number">1</span>) &#123;</span><br><span class="line">               res *= x;</span><br><span class="line">               res %= M</span><br><span class="line">           &#125;</span><br><span class="line">           x *= x;</span><br><span class="line">           x %= M;</span><br><span class="line">           n &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> res;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
 <p>证明快速幂为什么快。</p>
-<p>设指数N的二进制数位都是1，共k位（即最差情况）<br>$$<br>2^0+2^1+2^2+…2^k=N\<br>2^k-1=N\<br>k=log(N+1)\<br>$$<br>那么这样看顶多进行log(N+1)次循环就可以完成计算，时间复杂度为log(n)级别，明显比普通解法快不少。</p>
-<p>也有更加简洁的递归版，思想都是一样的，每个因数都平方。递归公式如下。<br>$$<br>x^n = \begin{cases}<br>x^{n-1}<em>x  &amp; n%2!=0 \<br>x^{n/2}</em>x^{n/2} &amp; n%2==0\<br>1&amp;n==0<br>\end{cases}<br>$$</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> M = <span class="number">1000</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">myPow</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> != <span class="number">0</span>) <span class="keyword">return</span> (myPow(x, n - <span class="number">1</span>) * x)%M;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = myPow(x, n / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> (temp * temp)%M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
+<p>设指数N的二进制数位都是1，共k位（即最差情况）</p>
+<script type="math/tex; mode=display">
+2^0+2^1+2^2+...2^k=N\\
+2^k-1=N\\
+k=log(N+1)\\</script><p>那么这样看顶多进行log(N+1)次循环就可以完成计算，时间复杂度为log(n)级别，明显比普通解法快不少。</p>
+<p>也有更加简洁的递归版，思想都是一样的，每个因数都平方。递归公式如下。</p>
+<script type="math/tex; mode=display">
+x^n = \begin{cases}  
+x^{n-1}*x  & n\%2!=0 \\
+x^{n/2}*x^{n/2} & n\%2==0\\
+1&n==0
+\end{cases}</script><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> M = <span class="number">1000</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">myPow</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> != <span class="number">0</span>) <span class="keyword">return</span> (myPow(x, n - <span class="number">1</span>) * x)%M;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = myPow(x, n / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> (temp * temp)%M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h4><blockquote>
 <h4 id="50-Pow-x-n"><a href="#50-Pow-x-n" class="headerlink" title="50. Pow(x, n)"></a><a href="https://leetcode-cn.com/problems/powx-n/" target="_blank" rel="noopener">50. Pow(x, n)</a></h4><p>难度中等390</p>
 <p>实现 <a href="https://www.cplusplus.com/reference/valarray/pow/" target="_blank" rel="noopener">pow(<em>x</em>, <em>n</em>)</a> ，即计算 x 的 n 次幂函数。</p>
 <p><strong>示例 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: 2.00000, 10</span><br><span class="line">&gt;输出: 1024.00000</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: 2.10000, 3</span><br><span class="line">&gt;输出: 9.26100</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 3:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: 2.00000, -2</span><br><span class="line">&gt;输出: 0.25000</span><br><span class="line">&gt;解释: 2-2 &#x3D; 1&#x2F;22 &#x3D; 1&#x2F;4 &#x3D; 0.25</span><br></pre></td></tr></table></figure>
-
 <p><strong>说明:</strong></p>
 <ul>
 <li>-100.0 &lt; <em>x</em> &lt; 100.0</li>
@@ -382,23 +388,20 @@
 </blockquote>
 <p>这题基本上就是快速幂的模版题，注意下指数的时候要取倒数即可，这题用普通做法是会超时的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">myPow</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> res = <span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">int</span> temp = n;</span><br><span class="line">        <span class="keyword">while</span> (n != <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> ((n &amp; <span class="number">1</span>) == <span class="number">1</span>) &#123;</span><br><span class="line">                res *= x;</span><br><span class="line">            &#125;</span><br><span class="line">            x *= x;</span><br><span class="line">            n /= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (temp &gt; <span class="number">0</span>) <span class="keyword">return</span> res;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">1</span> / res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <blockquote>
 <h4 id="372-超级次方"><a href="#372-超级次方" class="headerlink" title="372. 超级次方"></a><a href="https://leetcode-cn.com/problems/super-pow/" target="_blank" rel="noopener">372. 超级次方</a></h4><p>难度中等59</p>
 <p>你的任务是计算 <em>a**b</em> 对 1337 取模，<em>a</em> 是一个正整数，<em>b</em> 是一个非常大的正整数且会以数组形式给出。</p>
 <p><strong>示例 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: a &#x3D; 2, b &#x3D; [3]</span><br><span class="line">&gt;输出: 8</span><br></pre></td></tr></table></figure>
-
 <p><strong>示例 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;输入: a &#x3D; 2, b &#x3D; [1,0]</span><br><span class="line">&gt;输出: 1024</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>用数组储存指数，以防指数太大溢出。</p>
-<p>举个例子<br>$$<br>2^{[2,3,4,7,2,6]}=(2^{[2,3,4,7,2]})^{10}*2^6<br>$$<br>其实这就是一个递推公式了，base case是数组长度为0时，返回1。另外这题要求取模。</p>
+<p>举个例子</p>
+<script type="math/tex; mode=display">
+2^{[2,3,4,7,2,6]}=(2^{[2,3,4,7,2]})^{10}*2^6</script><p>其实这就是一个递推公式了，base case是数组长度为0时，返回1。另外这题要求取模。</p>
 <p>其实这题我试了试 不用快速幂 也不会超时。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> BASE = <span class="number">1337</span>;</span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">superPow</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span>[] b)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num :  </span><br><span class="line">                b) &#123; </span><br><span class="line">            list.add(num);    </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> helper(a, list);   </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">helper</span><span class="params">(<span class="keyword">int</span> a, ArrayList&lt;Integer&gt; list)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (list.size() == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> last = list.get(list.size() - <span class="number">1</span>);</span><br><span class="line">        list.remove(list.size()-<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> part1 = myPow(a, last);</span><br><span class="line">        <span class="keyword">int</span> part2 = myPow(helper(a, list), <span class="number">10</span>);</span><br><span class="line">        <span class="keyword">return</span> (part1 * part2) % BASE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">myPow</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line">        a %= BASE;</span><br><span class="line">        <span class="keyword">while</span> (n != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((n &amp; <span class="number">1</span>) == <span class="number">1</span>) &#123;</span><br><span class="line">                res *= a;</span><br><span class="line">                res %= BASE;</span><br><span class="line">            &#125;</span><br><span class="line">            a *= a;</span><br><span class="line">            a %= BASE;</span><br><span class="line">            n &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -512,7 +515,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
