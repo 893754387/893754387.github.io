@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="Cache的基本原理Cache对代码的影响Cache组织方式多核Cache一致性">
+<meta name="description" content="类加载的时机当遇到对一个类型的主动引用时，类初始化（加载，验证，准备自然在此之前进行），如：   new,putstaic ,getstatic，invokestaic 创建一个类的实例对象或者读写静态字段 使用静态方法时  反射调用该类  子类初始化，要先触发父类的初始化  虚拟机启动时，执行的主类会被率先初始化  接口定义了默认方法，实现这个接口的实现类初始化时，接口要先初始化    注意：被">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cache(1)">
-<meta property="og:url" content="http://yoursite.com/2020/04/21/Cache(1)/index.html">
+<meta property="og:title" content="类加载的时机">
+<meta property="og:url" content="http://yoursite.com/2020/07/17/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/index.html">
 <meta property="og:site_name" content="老实宇">
-<meta property="og:description" content="Cache的基本原理Cache对代码的影响Cache组织方式多核Cache一致性">
-<meta property="article:published_time" content="2020-04-21T15:26:42.000Z">
-<meta property="article:modified_time" content="2020-04-21T15:26:42.000Z">
+<meta property="og:description" content="类加载的时机当遇到对一个类型的主动引用时，类初始化（加载，验证，准备自然在此之前进行），如：   new,putstaic ,getstatic，invokestaic 创建一个类的实例对象或者读写静态字段 使用静态方法时  反射调用该类  子类初始化，要先触发父类的初始化  虚拟机启动时，执行的主类会被率先初始化  接口定义了默认方法，实现这个接口的实现类初始化时，接口要先初始化    注意：被">
+<meta property="og:image" content="http://yoursite.com/Users/wangyu/Library/Application%20Support/typora-user-images/image-20200717205650136.png">
+<meta property="article:published_time" content="2020-07-17T13:27:38.146Z">
+<meta property="article:modified_time" content="2020-07-17T13:27:38.146Z">
 <meta property="article:author" content="老实宇">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/Users/wangyu/Library/Application%20Support/typora-user-images/image-20200717205650136.png">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/04/21/Cache(1)/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/07/17/类加载的时机/"/>
 
 
 
 
 
-  <title>Cache(1) | 老实宇</title>
+  <title>类加载的时机 | 老实宇</title>
   
 
 
@@ -251,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/21/Cache(1)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/17/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老实宇">
@@ -268,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Cache(1)</h1>
+          <h1 class="post-title" itemprop="name headline">类加载的时机</h1>
         
 
         <div class="post-meta">
@@ -280,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-21T23:26:42+08:00">
-                2020-04-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-17T21:27:38+08:00">
+                2020-07-17
               </time>
             
 
@@ -290,28 +292,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%BB%84/" itemprop="url" rel="index">
-                    <span itemprop="name">计组</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -340,7 +320,44 @@
       
 
       
-        <h4 id="Cache的基本原理"><a href="#Cache的基本原理" class="headerlink" title="Cache的基本原理"></a><a href="https://zhuanlan.zhihu.com/p/102293437" target="_blank" rel="noopener">Cache的基本原理</a></h4><h4 id="Cache对代码的影响"><a href="#Cache对代码的影响" class="headerlink" title="Cache对代码的影响"></a><a href="https://zhuanlan.zhihu.com/p/102326184" target="_blank" rel="noopener">Cache对代码的影响</a></h4><h4 id="Cache组织方式"><a href="#Cache组织方式" class="headerlink" title="Cache组织方式"></a><a href="https://zhuanlan.zhihu.com/p/107096130" target="_blank" rel="noopener">Cache组织方式</a></h4><h4 id="多核Cache一致性"><a href="#多核Cache一致性" class="headerlink" title="多核Cache一致性"></a><a href="https://zhuanlan.zhihu.com/p/115114220" target="_blank" rel="noopener">多核Cache一致性</a></h4>
+        <h3 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h3><p>当遇到对一个类型的主动引用时，类初始化（加载，验证，准备自然在此之前进行），如：</p>
+<blockquote>
+<ol>
+<li><p><code>new</code>,<code>putstaic</code> ,<code>getstatic</code>，<code>invokestaic</code></p>
+<p>创建一个类的实例对象或者读写静态字段 使用静态方法时</p>
+</li>
+<li><p>反射调用该类</p>
+</li>
+<li><p>子类初始化，要先触发父类的初始化</p>
+</li>
+<li><p>虚拟机启动时，执行的主类会被率先初始化</p>
+</li>
+<li><p>接口定义了默认方法，实现这个接口的实现类初始化时，接口要先初始化</p>
+</li>
+</ol>
+</blockquote>
+<p>注意：被动引用时，如子类引用父类的静态字段进行引用时，子类不会初始化，但加载验证等阶段 jvm并未做出规定</p>
+<p>对一个类被动引用时，该类不会初始化，如：</p>
+<blockquote>
+<ol>
+<li>子类访问父类的静态字段，父类初始化，但是子类不会初始化</li>
+<li>数组定义引用类，不会初始化</li>
+<li>引用一个类中已经被放入常量池的常量，不会实例化</li>
+</ol>
+</blockquote>
+<h3 id="类加载的过程"><a href="#类加载的过程" class="headerlink" title="类加载的过程"></a>类加载的过程</h3><p><img src="/Users/wangyu/Library/Application Support/typora-user-images/image-20200717205650136.png" alt="image-20200717205650136" style="zoom:67%;"></p>
+<h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><pre><code>&gt;1. 通过一个类的权限定类名获得定义此类的二进制字节流
+&gt;2. 将这个字节流所代表的静态储存结构转换为方法区的运行时数据结构
+&gt;3. 在内存中生成一个`java.lang.Class`对象，作为这个类的各个数据的访问入口
+</code></pre><h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>将类中定义的静态变量（<code>staic</code>）分配内存并设置类变量初始值（基本数据类型是默认值，引用类型为null）</p>
+<blockquote>
+<p><code>final</code>修饰的变量在编译时 <code>javac</code>会为其生成<code>Constant Value</code>属性，在准备阶段按此值给变量赋值。</p>
+</blockquote>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>将常量池中的符号引用转换为直接饮用</p>
+<pre><code>&gt;符号引用：以一组符号来描述所引用的目标，符号可以是任意的字面量，通过符号引用可以无歧义的定位到目标。
+&gt;
+&gt;直接引用：直接指向目标的指针，相对偏移量，或者是一个可以间接定位的句柄。
+</code></pre>
       
     </div>
     
@@ -364,8 +381,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/04/19/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%E8%99%9A%E6%8B%9F%E6%9C%BAJVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E3%80%8B%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" rel="next" title="《深入理解java虚拟机JVM高级特性与最佳实践》经典垃圾收集器">
-                <i class="fa fa-chevron-left"></i> 《深入理解java虚拟机JVM高级特性与最佳实践》经典垃圾收集器
+              <a href="/2020/07/17/SDS/" rel="next" title="SDS">
+                <i class="fa fa-chevron-left"></i> SDS
               </a>
             
           </div>
@@ -374,8 +391,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/04/27/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E3%80%8B%E4%BD%9C%E4%B8%9A%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="《数据库系统基础》作业（二）">
-                《数据库系统基础》作业（二） <i class="fa fa-chevron-right"></i>
+              <a href="/2020/07/26/1011.%20%E5%9C%A8%20D%20%E5%A4%A9%E5%86%85%E9%80%81%E8%BE%BE%E5%8C%85%E8%A3%B9%E7%9A%84%E8%83%BD%E5%8A%9B/" rel="prev" title="1011. 在 D 天内送达包裹的能力">
+                1011. 在 D 天内送达包裹的能力 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -499,7 +516,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache的基本原理"><span class="nav-number">1.</span> <span class="nav-text">Cache的基本原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache对代码的影响"><span class="nav-number">2.</span> <span class="nav-text">Cache对代码的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache组织方式"><span class="nav-number">3.</span> <span class="nav-text">Cache组织方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多核Cache一致性"><span class="nav-number">4.</span> <span class="nav-text">多核Cache一致性</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载的时机"><span class="nav-number">1.</span> <span class="nav-text">类加载的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载的过程"><span class="nav-number">2.</span> <span class="nav-text">类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#加载"><span class="nav-number">2.1.</span> <span class="nav-text">加载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">3.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">4.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解析"><span class="nav-number">4.1.</span> <span class="nav-text">解析</span></a></li></ol></li></ol></div>
             
 
           </div>
