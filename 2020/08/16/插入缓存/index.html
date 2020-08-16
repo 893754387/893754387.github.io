@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="Cache的基本原理Cache对代码的影响Cache组织方式多核Cache一致性">
+<meta name="description" content="背景插入时，聚集索引的列往往是自增长的，数据页一般在缓存中存在，也就是顺序io，插入速度是非常快的。 但是对于非聚集的辅助索引来说，很大可能并不是顺序的，这样会离散的访问非聚集索引的b+树的叶子结点，这造成了大量的随机io。 概念对于非聚集索引的插入或者更新操作，不是每一次都直接直接插入索引页，而是先判断插入的非聚集索引页是否在缓存中，若在则插入，不在就先放在insert buffer中，再以一定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cache(1)">
-<meta property="og:url" content="http://yoursite.com/2020/04/21/Cache(1)/index.html">
+<meta property="og:title" content="插入缓存">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/%E6%8F%92%E5%85%A5%E7%BC%93%E5%AD%98/index.html">
 <meta property="og:site_name" content="老实宇">
-<meta property="og:description" content="Cache的基本原理Cache对代码的影响Cache组织方式多核Cache一致性">
-<meta property="article:published_time" content="2020-04-21T15:26:42.000Z">
-<meta property="article:modified_time" content="2020-04-21T15:26:42.000Z">
+<meta property="og:description" content="背景插入时，聚集索引的列往往是自增长的，数据页一般在缓存中存在，也就是顺序io，插入速度是非常快的。 但是对于非聚集的辅助索引来说，很大可能并不是顺序的，这样会离散的访问非聚集索引的b+树的叶子结点，这造成了大量的随机io。 概念对于非聚集索引的插入或者更新操作，不是每一次都直接直接插入索引页，而是先判断插入的非聚集索引页是否在缓存中，若在则插入，不在就先放在insert buffer中，再以一定">
+<meta property="article:published_time" content="2020-08-16T06:50:19.923Z">
+<meta property="article:modified_time" content="2020-08-16T06:50:19.923Z">
 <meta property="article:author" content="老实宇">
 <meta name="twitter:card" content="summary">
 
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/04/21/Cache(1)/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/08/16/插入缓存/"/>
 
 
 
 
 
-  <title>Cache(1) | 老实宇</title>
+  <title>插入缓存 | 老实宇</title>
   
 
 
@@ -251,7 +251,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/21/Cache(1)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/16/%E6%8F%92%E5%85%A5%E7%BC%93%E5%AD%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老实宇">
@@ -268,7 +268,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Cache(1)</h1>
+          <h1 class="post-title" itemprop="name headline">插入缓存</h1>
         
 
         <div class="post-meta">
@@ -280,8 +280,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-21T23:26:42+08:00">
-                2020-04-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-16T14:50:19+08:00">
+                2020-08-16
               </time>
             
 
@@ -303,8 +303,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%BB%84/" itemprop="url" rel="index">
-                    <span itemprop="name">计组</span>
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
                   </a>
                 </span>
 
@@ -340,7 +340,36 @@
       
 
       
-        <h4 id="Cache的基本原理"><a href="#Cache的基本原理" class="headerlink" title="Cache的基本原理"></a><a href="https://zhuanlan.zhihu.com/p/102293437" target="_blank" rel="noopener">Cache的基本原理</a></h4><h4 id="Cache对代码的影响"><a href="#Cache对代码的影响" class="headerlink" title="Cache对代码的影响"></a><a href="https://zhuanlan.zhihu.com/p/102326184" target="_blank" rel="noopener">Cache对代码的影响</a></h4><h4 id="Cache组织方式"><a href="#Cache组织方式" class="headerlink" title="Cache组织方式"></a><a href="https://zhuanlan.zhihu.com/p/107096130" target="_blank" rel="noopener">Cache组织方式</a></h4><h4 id="多核Cache一致性"><a href="#多核Cache一致性" class="headerlink" title="多核Cache一致性"></a><a href="https://zhuanlan.zhihu.com/p/115114220" target="_blank" rel="noopener">多核Cache一致性</a></h4>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>插入时，聚集索引的列往往是自增长的，数据页一般在缓存中存在，也就是<strong>顺序io</strong>，插入速度是非常快的。</p>
+<p>但是对于非聚集的辅助索引来说，很大可能并不是顺序的，这样会离散的访问非聚集索引的b+树的叶子结点，这造成了大量的<strong>随机io</strong>。</p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>对于非聚集索引的插入或者更新操作，不是每一次都直接直接插入索引页，而是先判断插入的非聚集索引页是否在缓存中，若在则插入，不在就先放在<code>insert buffe</code>r中，再以一定的频率和辅助索引进行合并，这将多次插入操作合并到一个操作，提高了插入性能。</p>
+<h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><h4 id="索引是辅助索引"><a href="#索引是辅助索引" class="headerlink" title="索引是辅助索引"></a>索引是辅助索引</h4><p>如果是主键索引的话，插入往往是顺序io，<code>insert buffer</code>作用不大，而且主键索引是唯一的（如下）。</p>
+<h4 id="索引是非唯一的"><a href="#索引是非唯一的" class="headerlink" title="索引是非唯一的"></a>索引是非唯一的</h4><p>如果是唯一索引的话，每次插入都需要离散的查询索引页判断是否重复，<code>insert buffer</code>失去了意义。</p>
+<p>所以插入缓存的对象是<strong>非唯一的辅助索引</strong>。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p><code>insert buffer</code>是一棵<code>b+树</code></p>
+<h4 id="非叶子结点"><a href="#非叶子结点" class="headerlink" title="非叶子结点"></a>非叶子结点</h4><hr>
+<p>​                            spaceid             |                 marker                     |                 offset</p>
+<hr>
+<p><code>spaceid</code> 唯一的标识一张表</p>
+<p><code>marker</code> 兼容老版本</p>
+<p><code>offset</code> 所在页的偏移量，标识表中的页</p>
+<h4 id="叶子结点"><a href="#叶子结点" class="headerlink" title="叶子结点"></a>叶子结点</h4><hr>
+<p>​                        spaceid     |     marker     |     offset     |     metadata     |     seconday index record</p>
+<hr>
+<p><code>metadata</code> 含有辅助索引插入<code>insert buffer</code>的顺序等信息</p>
+<p><code>seconday index record</code> 插入辅助索引的内容</p>
+<h3 id="合并的时机"><a href="#合并的时机" class="headerlink" title="合并的时机"></a>合并的时机</h3><blockquote>
+<ol>
+<li><p>辅助索引页被读到缓存中</p>
+<p>如执行<code>select</code>语句时，先检查<code>insert buffer bitmap</code>，判断要读取的索引页是否存在未合并的记录在<code>insert buffer</code>中，若存在，则进行合并操作。</p>
+</li>
+<li><p><code>insert buffer bitmap</code>追踪到辅助索引页没有可用空间了</p>
+</li>
+<li><p><code>master thread</code></p>
+</li>
+</ol>
+</blockquote>
+
       
     </div>
     
@@ -364,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/04/19/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%E8%99%9A%E6%8B%9F%E6%9C%BAJVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E3%80%8B%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" rel="next" title="《深入理解java虚拟机JVM高级特性与最佳实践》经典垃圾收集器">
-                <i class="fa fa-chevron-left"></i> 《深入理解java虚拟机JVM高级特性与最佳实践》经典垃圾收集器
+              <a href="/2020/08/15/%E8%B7%B3%E8%A1%A8%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="跳表的分析">
+                <i class="fa fa-chevron-left"></i> 跳表的分析
               </a>
             
           </div>
@@ -373,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/04/27/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E3%80%8B%E4%BD%9C%E4%B8%9A%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="《数据库系统基础》作业（二）">
-                《数据库系统基础》作业（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -499,7 +524,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache的基本原理"><span class="nav-number">1.</span> <span class="nav-text">Cache的基本原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache对代码的影响"><span class="nav-number">2.</span> <span class="nav-text">Cache对代码的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache组织方式"><span class="nav-number">3.</span> <span class="nav-text">Cache组织方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多核Cache一致性"><span class="nav-number">4.</span> <span class="nav-text">多核Cache一致性</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#概念"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件"><span class="nav-number">3.</span> <span class="nav-text">条件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#索引是辅助索引"><span class="nav-number">3.1.</span> <span class="nav-text">索引是辅助索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引是非唯一的"><span class="nav-number">3.2.</span> <span class="nav-text">索引是非唯一的</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#非叶子结点"><span class="nav-number">4.1.</span> <span class="nav-text">非叶子结点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#叶子结点"><span class="nav-number">4.2.</span> <span class="nav-text">叶子结点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并的时机"><span class="nav-number">5.</span> <span class="nav-text">合并的时机</span></a></li></ol></div>
             
 
           </div>
